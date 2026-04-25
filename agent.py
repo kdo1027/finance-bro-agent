@@ -1,0 +1,588 @@
+"""
+agent.py — The LangGraph agent for Agentic Finance Bro.
+
+This file defines the state machine that:
+1. Greets the user and explains the system
+2. Walks through intake questions (Q1-Q10)
+3. Confirms the profile
+4. Calls signal tools (A-D)
+5. Synthesizes a recommendation
+
+Architecture:
+- StateGraph with nodes connected by edges.
+- Each node is a function that reads/writes AgentState.
+- The LLM handles natural conversation + structured extraction.
+"""
+
+import json
+from typing import Annotated, TypedDict
+
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langgraph.graph import END, START, StateGraph
+from langgraph.graph.message import add_messages
+
+from schema import (ExtractedConstraints, ExtractedExperience, ExtractedGoals,
+                    ExtractedMotivation, ExtractedRisk, UserProfile)
+from tools import ALL_TOOLS
+
+# Agent State
+
+class AgentState(TypedDict):
+    """
+    The state that flows through every node in the graph.
+
+    - messages: full conversation history (LangGraph auto-appends via add_messages)
+    - profile: the user's investment profile being built up
+    - current_phase: which intake phase we're in
+    - signals: results from tool calls (populated in analysis phase)
+    """
+    messages: Annotated[list, add_messages]
+    profile: dict          # serialized UserProfile
+    current_phase: str     # "greet" | "experience" | "risk" | "goals" | "constraints" | "motivation" | "confirm" | "analyze" | "synthesize" | "done"
+    signals: dict          # results from Signals A-D
+
+
+# LLM Setup
+
+def get_llm(temperature: float = 0.3):
+    """
+    Initialize the LLM
+    """
+    return ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=temperature)
+
+
+def _text(response) -> str:
+    """Extract plain text from a response whose content may be a list of blocks."""
+    content = response.content
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        return "".join(
+            block.get("text", "") if isinstance(block, dict) else str(block)
+            for block in content
+        )
+    return str(content)
+
+
+def _has_data(extracted) -> bool:
+    """Return True if the LLM extracted at least one non-None field."""
+    return any(v is not None for v in extracted.model_dump().values())
+
+
+# System Prompt
+
+SYSTEM_PROMPT = """You are the Agentic Finance Bro, a friendly and knowledgeable retail investment advisor.
+
+Your personality:
+- Approachable and clear — no jargon unless the user is experienced
+- Encouraging but honest — never hype or guarantee returns
+- Conversational — ask one or two questions at a time, not a form
+
+Your job right now is to gather information about the user's investment profile.
+Ask questions naturally. If the user gives partial answers, work with what they give
+and ask follow-ups. Don't repeat questions they've already answered.
+
+IMPORTANT: Be concise. Keep responses to 2-3 sentences when asking questions.
+Don't lecture — just ask and acknowledge."""
+
+
+# Node Functions
+
+def greet_node(state: AgentState) -> dict:
+    """Opening message — introduce the agent and kick off the intake."""
+    llm = get_llm()
+
+    response = llm.invoke([
+        SystemMessage(content=SYSTEM_PROMPT),
+        HumanMessage(content=(
+            "Generate a brief, friendly greeting for a new user. "
+            "Introduce yourself as a retail investment advisor. "
+            "Then ask the first question: how they'd rate their investing experience "
+            "on a scale of 1-5 (1 = 'what's an ETF?', 5 = 'I've run my own options strategies'), "
+            "and which asset classes they've invested in before "
+            "(stocks, ETFs/mutual funds, bonds, crypto, options/futures, or none yet). "
+            "Keep it to 3-4 sentences total."
+        )),
+    ])
+
+    return {
+        "messages": [AIMessage(content=_text(response))],
+        "current_phase": "experience",
+    }
+
+
+def experience_node(state: AgentState) -> dict:
+    """Extract experience level and prior investments from user response, then ask about risk."""
+    llm = get_llm()
+
+    # Extract structured data from the user's last message
+    extraction_llm = llm.with_structured_output(ExtractedExperience)
+    user_msg = state["messages"][-1].content
+
+    extracted = extraction_llm.invoke([
+        SystemMessage(content=(
+            "Extract the user's investing experience level and prior investment types "
+            "from their message. Map their self-rating: 1-2 = beginner, 3 = intermediate, "
+            "4-5 = advanced. If they mention asset classes, map them to the enum values. "
+            "If information is missing, leave the field as null."
+        )),
+        HumanMessage(content=user_msg),
+    ])
+
+    # Update profile
+    profile = UserProfile(**state["profile"])
+    if extracted.experience_level:
+        profile.experience_level = extracted.experience_level
+    if extracted.prior_investments:
+        profile.prior_investments = extracted.prior_investments
+
+    if not _has_data(extracted):
+        response = llm.invoke(
+            [SystemMessage(content=SYSTEM_PROMPT)]
+            + state["messages"]
+            + [HumanMessage(content=(
+                "The user didn't answer the question. Politely let them know you need "
+                "their experience rating (1-5) and which asset classes they've tried. Ask again."
+            ))]
+        )
+        return {
+            "messages": [AIMessage(content=_text(response))],
+            "profile": profile.model_dump(),
+            "current_phase": "experience",
+        }
+
+    # Generate the next question (risk tolerance)
+    response = llm.invoke(
+        [SystemMessage(content=SYSTEM_PROMPT)]
+        + state["messages"]
+        + [HumanMessage(content=(
+            "The user just told you about their experience. Briefly acknowledge what they said, "
+            "then ask TWO questions about risk tolerance:\n"
+            "1) If their portfolio dropped 25% in a month, what would they do? "
+            "(buy more / hold / sell some / sell everything)\n"
+            "2) Which statement fits them best?\n"
+            "  - I want to preserve what I have, even if returns are modest\n"
+            "  - I want steady growth with limited downside\n"
+            "  - I'm comfortable with swings for better long-term returns\n"
+            "  - Maximum growth — I can stomach big drawdowns\n"
+            "Keep it conversational and concise."
+        ))]
+    )
+
+    return {
+        "messages": [AIMessage(content=_text(response))],
+        "profile": profile.model_dump(),
+        "current_phase": "risk",
+    }
+
+
+def risk_node(state: AgentState) -> dict:
+    """Extract risk tolerance, then ask about goals and horizon."""
+    llm = get_llm()
+
+    extraction_llm = llm.with_structured_output(ExtractedRisk)
+    user_msg = state["messages"][-1].content
+
+    extracted = extraction_llm.invoke([
+        SystemMessage(content=(
+            "Extract the user's drawdown response and risk statement from their message. "
+            "Map to the closest enum value. If information is missing, leave as null."
+        )),
+        HumanMessage(content=user_msg),
+    ])
+
+    profile = UserProfile(**state["profile"])
+    if extracted.drawdown_response:
+        profile.drawdown_response = extracted.drawdown_response
+    if extracted.risk_statement:
+        profile.risk_statement = extracted.risk_statement
+
+    if not _has_data(extracted):
+        response = llm.invoke(
+            [SystemMessage(content=SYSTEM_PROMPT)]
+            + state["messages"]
+            + [HumanMessage(content=(
+                "The user didn't answer the risk questions. Politely ask again: "
+                "what would they do if their portfolio dropped 25% (buy more / hold / sell some / sell everything), "
+                "and which risk statement best fits them."
+            ))]
+        )
+        return {
+            "messages": [AIMessage(content=_text(response))],
+            "profile": profile.model_dump(),
+            "current_phase": "risk",
+        }
+
+    response = llm.invoke(
+        [SystemMessage(content=SYSTEM_PROMPT)]
+        + state["messages"]
+        + [HumanMessage(content=(
+            "The user just shared their risk tolerance. Briefly acknowledge, then ask about goals:\n"
+            "1) What's their primary investing goal? "
+            "(retirement / house down payment / general wealth building / short-term income / other)\n"
+            "2) When do they expect to need this money? "
+            "(less than 1 year / 1-3 years / 3-10 years / 10+ years)\n"
+            "3) What's their target annualized return? "
+            "(under 5% / 5-10% / 10-15% / 15%+)\n"
+            "Keep it concise."
+        ))]
+    )
+
+    return {
+        "messages": [AIMessage(content=_text(response))],
+        "profile": profile.model_dump(),
+        "current_phase": "goals",
+    }
+
+
+def goals_node(state: AgentState) -> dict:
+    """Extract goals/horizon/return target, then ask about constraints."""
+    llm = get_llm()
+
+    extraction_llm = llm.with_structured_output(ExtractedGoals)
+    user_msg = state["messages"][-1].content
+
+    extracted = extraction_llm.invoke([
+        SystemMessage(content=(
+            "Extract the user's investing goal, time horizon, and target return "
+            "from their message. Map to the closest enum values."
+        )),
+        HumanMessage(content=user_msg),
+    ])
+
+    profile = UserProfile(**state["profile"])
+    if extracted.investing_goal:
+        profile.investing_goal = extracted.investing_goal
+    if extracted.time_horizon:
+        profile.time_horizon = extracted.time_horizon
+    if extracted.target_return:
+        profile.target_return = extracted.target_return
+
+    if not _has_data(extracted):
+        response = llm.invoke(
+            [SystemMessage(content=SYSTEM_PROMPT)]
+            + state["messages"]
+            + [HumanMessage(content=(
+                "The user didn't answer the goals questions. Politely ask again: "
+                "their primary investing goal, when they expect to need the money, "
+                "and their target annualized return."
+            ))]
+        )
+        return {
+            "messages": [AIMessage(content=_text(response))],
+            "profile": profile.model_dump(),
+            "current_phase": "goals",
+        }
+
+    response = llm.invoke(
+        [SystemMessage(content=SYSTEM_PROMPT)]
+        + state["messages"]
+        + [HumanMessage(content=(
+            "The user shared their goals. Briefly acknowledge, then ask:\n"
+            "1) Any sectors they want to avoid or prioritize? "
+            "(ESG/sustainability focus, exclude tobacco/defense, specific industry interest, no preference)\n"
+            "2) How much of their total savings does this investment represent? "
+            "(under 10% / 10-25% / 25-50% / 50%+)\n"
+            "Keep it concise."
+        ))]
+    )
+
+    return {
+        "messages": [AIMessage(content=_text(response))],
+        "profile": profile.model_dump(),
+        "current_phase": "constraints",
+    }
+
+
+def constraints_node(state: AgentState) -> dict:
+    """Extract constraints, then ask the motivation question."""
+    llm = get_llm()
+
+    extraction_llm = llm.with_structured_output(ExtractedConstraints)
+    user_msg = state["messages"][-1].content
+
+    extracted = extraction_llm.invoke([
+        SystemMessage(content=(
+            "Extract sector preferences and portfolio percentage from the user's message. "
+            "If they mention a specific industry, capture it in sector_detail."
+        )),
+        HumanMessage(content=user_msg),
+    ])
+
+    profile = UserProfile(**state["profile"])
+    if extracted.sector_preference:
+        profile.sector_preference = extracted.sector_preference
+    if extracted.sector_detail:
+        profile.sector_detail = extracted.sector_detail
+    if extracted.portfolio_percent:
+        profile.portfolio_percent = extracted.portfolio_percent
+
+    if not _has_data(extracted):
+        response = llm.invoke(
+            [SystemMessage(content=SYSTEM_PROMPT)]
+            + state["messages"]
+            + [HumanMessage(content=(
+                "The user didn't answer the constraint questions. Politely ask again: "
+                "any sector preferences or exclusions, and what percentage of their "
+                "total savings this investment represents."
+            ))]
+        )
+        return {
+            "messages": [AIMessage(content=_text(response))],
+            "profile": profile.model_dump(),
+            "current_phase": "constraints",
+        }
+
+    response = llm.invoke(
+        [SystemMessage(content=SYSTEM_PROMPT)]
+        + state["messages"]
+        + [HumanMessage(content=(
+            "Almost done! Ask the user one final question: "
+            "In one sentence, why are they investing right now? "
+            "This helps you personalize the recommendation. Keep it brief and warm."
+        ))]
+    )
+
+    return {
+        "messages": [AIMessage(content=_text(response))],
+        "profile": profile.model_dump(),
+        "current_phase": "motivation",
+    }
+
+
+def motivation_node(state: AgentState) -> dict:
+    """Extract motivation, then show the profile for confirmation."""
+    llm = get_llm()
+
+    extraction_llm = llm.with_structured_output(ExtractedMotivation)
+    user_msg = state["messages"][-1].content
+
+    extracted = extraction_llm.invoke([
+        SystemMessage(content="Extract the user's investing motivation from their message."),
+        HumanMessage(content=user_msg),
+    ])
+
+    profile = UserProfile(**state["profile"])
+    if extracted.investing_motivation:
+        profile.investing_motivation = extracted.investing_motivation
+
+    if not _has_data(extracted):
+        response = llm.invoke(
+            [SystemMessage(content=SYSTEM_PROMPT)]
+            + state["messages"]
+            + [HumanMessage(content=(
+                "The user didn't answer. Politely ask again: in one sentence, "
+                "why are they investing right now?"
+            ))]
+        )
+        return {
+            "messages": [AIMessage(content=_text(response))],
+            "profile": profile.model_dump(),
+            "current_phase": "motivation",
+        }
+
+    # Build a readable summary of the profile
+    status = profile.completion_status()
+    summary_lines = []
+    for field_name, value in status["filled"].items():
+        display_name = field_name.replace("_", " ").title()
+        if isinstance(value, list):
+            display_value = ", ".join(str(v.value) if hasattr(v, "value") else str(v) for v in value)
+        elif hasattr(value, "value"):
+            display_value = value.value
+        else:
+            display_value = str(value)
+        summary_lines.append(f"  - {display_name}: {display_value}")
+
+    profile_summary = "\n".join(summary_lines)
+
+    response = llm.invoke(
+        [SystemMessage(content=SYSTEM_PROMPT)]
+        + state["messages"]
+        + [HumanMessage(content=(
+            f"Great, you've collected the user's full profile. Here's what you have:\n\n"
+            f"{profile_summary}\n\n"
+            "Present this back to the user in a friendly, readable way. "
+            "Ask them to confirm if everything looks right, or if they'd like to change anything. "
+            "Tell them that once confirmed, you'll analyze the market and generate a recommendation."
+        ))]
+    )
+
+    return {
+        "messages": [AIMessage(content=_text(response))],
+        "profile": profile.model_dump(),
+        "current_phase": "confirm",
+    }
+
+
+def confirm_node(state: AgentState) -> dict:
+    """Check if user confirmed. If yes, move to analysis. If not, handle corrections."""
+    llm = get_llm()
+    user_msg = state["messages"][-1].content.lower()
+
+    # Simple confirmation detection
+    confirms = ["yes", "yeah", "yep", "looks good", "correct", "confirm", "let's go", "go ahead", "sure", "that's right"]
+    is_confirmed = any(c in user_msg for c in confirms)
+
+    if is_confirmed:
+        response = llm.invoke(
+            [SystemMessage(content=SYSTEM_PROMPT)]
+            + state["messages"]
+            + [HumanMessage(content=(
+                "The user confirmed their profile. Tell them you're now analyzing the market "
+                "using four independent signals: sentiment analysis, fundamental data, "
+                "macro environment, and momentum indicators. Keep it to 1-2 sentences. "
+                "Sound confident but not over-promising."
+            ))]
+        )
+        return {
+            "messages": [AIMessage(content=_text(response))],
+            "current_phase": "analyze",
+        }
+    else:
+        response = llm.invoke(
+            [SystemMessage(content=SYSTEM_PROMPT)]
+            + state["messages"]
+            + [HumanMessage(content=(
+                "The user wants to change something in their profile. "
+                "Ask them what they'd like to update. Be helpful and concise."
+            ))]
+        )
+        return {
+            "messages": [AIMessage(content=_text(response))],
+            "current_phase": "confirm",  # stay in confirm loop
+        }
+
+
+def analyze_node(state: AgentState) -> dict:
+    """Call all four signal tools and collect results."""
+    profile = UserProfile(**state["profile"])
+
+    # Determine which sectors to analyze based on profile
+    # Default sectors if user had no specific preference
+    sectors = ["tech", "healthcare", "energy", "financials"]
+
+    if profile.sector_preference and profile.sector_preference.value == "specific_industry_interest" and profile.sector_detail:
+        sectors = [profile.sector_detail.lower()]
+
+    # Call all signal tools
+    sentiment = ALL_TOOLS[0].invoke({"sectors": sectors})       # Signal A
+    fundamentals = ALL_TOOLS[1].invoke({"sectors": sectors})    # Signal B
+    macro = ALL_TOOLS[2].invoke({})                             # Signal C
+    momentum = ALL_TOOLS[3].invoke({"sectors": sectors})        # Signal D
+
+    signals = {
+        "signal_a_sentiment": sentiment,
+        "signal_b_fundamentals": fundamentals,
+        "signal_c_macro": macro,
+        "signal_d_momentum": momentum,
+    }
+
+    return {
+        "signals": signals,
+        "current_phase": "synthesize",
+    }
+
+
+def synthesize_node(state: AgentState) -> dict:
+    """
+    The big one: take the user profile + all four signals and generate
+    a personalized investment recommendation.
+
+    This is where the LLM acts as a synthesizer/tiebreaker.
+    """
+    llm = get_llm(temperature=0.4)  # slightly more creative for recommendations
+    profile = UserProfile(**state["profile"])
+    signals = state["signals"]
+
+    synthesis_prompt = f"""You are a financial advisor AI synthesizing multiple data signals into a recommendation.
+
+USER PROFILE:
+{json.dumps(profile.model_dump(), indent=2, default=str)}
+
+SIGNAL A — SENTIMENT (FinBERT on news headlines):
+{json.dumps(signals.get('signal_a_sentiment', {}), indent=2)}
+
+SIGNAL B — FUNDAMENTALS (P/E, debt, revenue growth):
+{json.dumps(signals.get('signal_b_fundamentals', {}), indent=2)}
+
+SIGNAL C — MACRO ENVIRONMENT (rates, inflation, unemployment):
+{json.dumps(signals.get('signal_c_macro', {}), indent=2)}
+
+SIGNAL D — MOMENTUM (30-day vs 90-day moving averages):
+{json.dumps(signals.get('signal_d_momentum', {}), indent=2)}
+
+INSTRUCTIONS:
+1. Analyze each signal independently first.
+2. Identify conflicts between signals (e.g., sentiment is bullish but fundamentals are stretched).
+3. Use the user's profile (risk tolerance, time horizon, goals, % of savings) as a TIEBREAKER.
+   - Someone investing 50%+ of savings with a 1-year horizon needs conservative recs
+   - Someone investing <10% with 10+ years can handle more risk
+4. Recommend 2-3 sector allocations with percentage weights.
+5. Explain your reasoning, referencing specific signals and how the profile influenced your decision.
+6. Include a brief risk disclaimer.
+7. Match your language complexity to the user's experience level.
+
+Be specific and data-driven. Reference actual signal values. Don't be generic."""
+
+    response = llm.invoke(
+        [SystemMessage(content=SYSTEM_PROMPT)]
+        + state["messages"]
+        + [HumanMessage(content=synthesis_prompt)]
+    )
+
+    return {
+        "messages": [AIMessage(content=_text(response))],
+        "current_phase": "done",
+    }
+
+
+# ── Graph Construction ─────────────────────────────────────────────
+
+def route_by_phase(state: AgentState) -> str:
+    """Conditional edge: route to the next node based on current_phase."""
+    return state["current_phase"]
+
+
+def build_graph() -> StateGraph:
+    graph = StateGraph(AgentState)
+
+    graph.add_node("greet", greet_node)
+    graph.add_node("experience", experience_node)
+    graph.add_node("risk", risk_node)
+    graph.add_node("goals", goals_node)
+    graph.add_node("constraints", constraints_node)
+    graph.add_node("motivation", motivation_node)
+    graph.add_node("confirm", confirm_node)
+    graph.add_node("analyze", analyze_node)
+    graph.add_node("synthesize", synthesize_node)
+
+    # Route from START to the correct node based on current_phase.
+    # This replaces set_entry_point so each graph.invoke() lands on the right node.
+    graph.add_conditional_edges(
+        START,
+        lambda state: state["current_phase"],
+        {
+            "greet":       "greet",
+            "experience":  "experience",
+            "risk":        "risk",
+            "goals":       "goals",
+            "constraints": "constraints",
+            "motivation":  "motivation",
+            "confirm":     "confirm",
+            "analyze":     "analyze",
+        },
+    )
+
+    graph.add_edge("greet", END)
+    graph.add_edge("experience", END)
+    graph.add_edge("risk", END)
+    graph.add_edge("goals", END)
+    graph.add_edge("constraints", END)
+    graph.add_edge("motivation", END)
+    graph.add_edge("confirm", END)
+    graph.add_edge("analyze", "synthesize")
+    graph.add_edge("synthesize", END)
+
+    return graph.compile()
