@@ -24,7 +24,7 @@ from langgraph.graph.message import add_messages
 
 from schema import (ExtractedConstraints, ExtractedExperience, ExtractedGoals,
                     ExtractedMotivation, ExtractedRisk, UserProfile)
-from tools import ALL_TOOLS
+from tools import SECTOR_TOOLS, STOCK_TOOLS, SECTOR_STOCKS
 
 # Agent State
 
@@ -72,19 +72,16 @@ def _has_data(extracted) -> bool:
 
 # System Prompt
 
-SYSTEM_PROMPT = """You are the Agentic Finance Bro, a friendly and knowledgeable retail investment advisor.
+SYSTEM_PROMPT = """You are Finance Bro, a friendly investment guide for everyday people.
 
-Your personality:
-- Approachable and clear — no jargon unless the user is experienced
-- Encouraging but honest — never hype or guarantee returns
-- Conversational — ask one or two questions at a time, not a form
-
-Your job right now is to gather information about the user's investment profile.
-Ask questions naturally. If the user gives partial answers, work with what they give
-and ask follow-ups. Don't repeat questions they've already answered.
-
-IMPORTANT: Be concise. Keep responses to 2-3 sentences when asking questions.
-Don't lecture — just ask and acknowledge."""
+Your rules:
+- Never use financial jargon. If a word needs a definition, replace it with plain English.
+- Never guarantee returns or hype a stock. Be honest about risk.
+- Always tie advice back to what the user told you about themselves.
+- Be short. Two sentences is better than five.
+- During intake: ask one or two questions at a time, never a long form.
+- Don't repeat questions the user already answered.
+- During recommendations: always end with one concrete next step the user can actually take."""
 
 
 # Node Functions
@@ -455,28 +452,61 @@ def confirm_node(state: AgentState) -> dict:
         }
 
 
+def _compute_sector_score(sector: str, sentiment: dict, fundamentals: dict, momentum: dict) -> float:
+    """Pre-score a sector to find top candidates for stock-level analysis.
+    Weights: fundamentals 35%, sentiment 25%, macro placeholder 25%, momentum 15%.
+    Macro is neutral (0.0) here since it applies equally to all — the LLM factors it in synthesis.
+    """
+    s = sentiment.get(sector, {}).get("sentiment_score", 0.0)
+    f = fundamentals.get(sector, {}).get("health_score", 0.0)
+    m = momentum.get(sector, {}).get("momentum_score", 0.0)
+    return (s * 0.25) + (f * 0.35) + (0.0 * 0.25) + (m * 0.15)
+
+
 def analyze_node(state: AgentState) -> dict:
-    """Call all four signal tools and collect results."""
+    """Two-pass analysis: score sectors first, then fetch stock-level signals for top sectors."""
     profile = UserProfile(**state["profile"])
 
-    # Determine which sectors to analyze based on profile
-    # Default sectors if user had no specific preference
     sectors = ["tech", "healthcare", "energy", "financials"]
-
-    if profile.sector_preference and profile.sector_preference.value == "specific_industry_interest" and profile.sector_detail:
+    if (profile.sector_preference
+            and profile.sector_preference.value == "specific_industry_interest"
+            and profile.sector_detail):
         sectors = [profile.sector_detail.lower()]
 
-    # Call all signal tools
-    sentiment = ALL_TOOLS[0].invoke({"sectors": sectors})       # Signal A
-    fundamentals = ALL_TOOLS[1].invoke({"sectors": sectors})    # Signal B
-    macro = ALL_TOOLS[2].invoke({})                             # Signal C
-    momentum = ALL_TOOLS[3].invoke({"sectors": sectors})        # Signal D
+    # Pass 1 — sector-level signals
+    sentiment    = SECTOR_TOOLS[0].invoke({"sectors": sectors})   # Signal A
+    fundamentals = SECTOR_TOOLS[1].invoke({"sectors": sectors})   # Signal B
+    macro        = SECTOR_TOOLS[2].invoke({})                     # Signal C
+    momentum     = SECTOR_TOOLS[3].invoke({"sectors": sectors})   # Signal D
+
+    # Pre-score to find top 3 sectors (LLM does full scoring in synthesize_node)
+    sector_scores = {s: _compute_sector_score(s, sentiment, fundamentals, momentum) for s in sectors}
+    top_sectors = sorted(sector_scores, key=lambda x: sector_scores[x], reverse=True)[:3]
+
+    # Pass 2 — stock-level signals for top sectors only
+    top_tickers = [
+        stock["ticker"]
+        for sector in top_sectors
+        for stock in SECTOR_STOCKS.get(sector, [])
+    ]
+
+    stock_sentiment    = STOCK_TOOLS[0].invoke({"tickers": top_tickers})  # Signal E
+    stock_fundamentals = STOCK_TOOLS[1].invoke({"tickers": top_tickers})  # Signal F
+    stock_momentum     = STOCK_TOOLS[2].invoke({"tickers": top_tickers})  # Signal G
 
     signals = {
-        "signal_a_sentiment": sentiment,
+        # Sector-level
+        "signal_a_sentiment":    sentiment,
         "signal_b_fundamentals": fundamentals,
-        "signal_c_macro": macro,
-        "signal_d_momentum": momentum,
+        "signal_c_macro":        macro,
+        "signal_d_momentum":     momentum,
+        # Pre-scored ranking (for reference)
+        "top_sectors":           top_sectors,
+        "sector_stocks":         {s: SECTOR_STOCKS.get(s, []) for s in top_sectors},
+        # Stock-level
+        "signal_e_stock_sentiment":    stock_sentiment,
+        "signal_f_stock_fundamentals": stock_fundamentals,
+        "signal_g_stock_momentum":     stock_momentum,
     }
 
     return {
@@ -496,35 +526,135 @@ def synthesize_node(state: AgentState) -> dict:
     profile = UserProfile(**state["profile"])
     signals = state["signals"]
 
-    synthesis_prompt = f"""You are a financial advisor AI synthesizing multiple data signals into a recommendation.
+    synthesis_prompt = f"""You are scoring investment options to find the best fit for this specific user.
 
 USER PROFILE:
 {json.dumps(profile.model_dump(), indent=2, default=str)}
 
-SIGNAL A — SENTIMENT (FinBERT on news headlines):
+═══════════════════════════════════════════════
+PASS 1 — SECTOR-LEVEL SIGNALS
+═══════════════════════════════════════════════
+
+SIGNAL A — NEWS MOOD (sector sentiment, -1.0 to 1.0):
 {json.dumps(signals.get('signal_a_sentiment', {}), indent=2)}
 
-SIGNAL B — FUNDAMENTALS (P/E, debt, revenue growth):
+SIGNAL B — COMPANY HEALTH (sector fundamentals, health_score -1.0 to 1.0):
 {json.dumps(signals.get('signal_b_fundamentals', {}), indent=2)}
 
-SIGNAL C — MACRO ENVIRONMENT (rates, inflation, unemployment):
+SIGNAL C — ECONOMY VIBE (macro, applies to all sectors equally):
 {json.dumps(signals.get('signal_c_macro', {}), indent=2)}
 
-SIGNAL D — MOMENTUM (30-day vs 90-day moving averages):
+SIGNAL D — PRICE TREND (sector ETF price action — supporting signal only):
 {json.dumps(signals.get('signal_d_momentum', {}), indent=2)}
 
-INSTRUCTIONS:
-1. Analyze each signal independently first.
-2. Identify conflicts between signals (e.g., sentiment is bullish but fundamentals are stretched).
-3. Use the user's profile (risk tolerance, time horizon, goals, % of savings) as a TIEBREAKER.
-   - Someone investing 50%+ of savings with a 1-year horizon needs conservative recs
-   - Someone investing <10% with 10+ years can handle more risk
-4. Recommend 2-3 sector allocations with percentage weights.
-5. Explain your reasoning, referencing specific signals and how the profile influenced your decision.
-6. Include a brief risk disclaimer.
-7. Match your language complexity to the user's experience level.
+Pre-scored top sectors (use as a starting point, apply full scoring below):
+{json.dumps(signals.get('top_sectors', []), indent=2)}
 
-Be specific and data-driven. Reference actual signal values. Don't be generic."""
+═══════════════════════════════════════════════
+PASS 2 — STOCK-LEVEL SIGNALS (top sectors only)
+═══════════════════════════════════════════════
+
+STOCKS IN TOP SECTORS:
+{json.dumps(signals.get('sector_stocks', {}), indent=2)}
+
+SIGNAL E — NEWS MOOD per stock (sentiment_score -1.0 to 1.0):
+{json.dumps(signals.get('signal_e_stock_sentiment', {}), indent=2)}
+
+SIGNAL F — COMPANY HEALTH per stock (health_score -1.0 to 1.0, volatility label):
+{json.dumps(signals.get('signal_f_stock_fundamentals', {}), indent=2)}
+
+SIGNAL G — PRICE TREND per stock (momentum_score -1.0 to 1.0, recent % changes):
+{json.dumps(signals.get('signal_g_stock_momentum', {}), indent=2)}
+
+═══════════════════════════════════════════════
+SCORING INSTRUCTIONS
+═══════════════════════════════════════════════
+
+STEP 1 — SCORE AND GRADE EACH SECTOR
+
+Composite score = (news_mood × 0.25) + (company_health × 0.35) + (economy_vibe × 0.25) + (price_trend × 0.15)
+
+Note: price_trend (Signal D) is price action only — a supporting signal, not a primary driver.
+Economy vibe (Signal C) applies equally to all sectors — use the macro_score value directly.
+
+Adjust weights by time horizon:
+  - Under 2 years:  price_trend → 0.25, company_health → 0.25
+  - 2–7 years:      use defaults above
+  - 7+ years:       company_health → 0.45, price_trend → 0.05
+
+Apply profile filter after scoring:
+  - conservative risk (preserve_capital or sell_everything): remove any sector where
+    company_health score < 0 OR news_mood score < -0.2
+  - moderate risk (steady_growth or hold): remove sectors where 3+ signals are below 0
+  - aggressive risk (comfortable_with_swings or maximum_growth / buy_more): keep all, flag risks
+
+Map composite score to grade:
+  A = 0.6 to 1.0    → Strong
+  B = 0.2 to 0.59   → Moderate
+  C = -0.19 to 0.19 → Neutral
+  D = below -0.2    → Weak
+
+Select top 3 sectors by composite score. Only A and B grades move forward unless fewer exist.
+
+STEP 2 — SCORE STOCKS WITHIN TOP SECTORS
+
+Composite score = (news_mood × 0.25) + (company_health × 0.35) + (economy_vibe × 0.25) + (price_trend × 0.15)
+Use the same macro_score from Signal C for economy_vibe on all stocks.
+
+Additional filter: does the stock's volatility match the user's drawdown tolerance?
+  - preserve_capital or sell_everything: exclude "high" volatility stocks
+  - steady_growth or hold: flag "high" volatility but keep
+  - comfortable_with_swings or buy_more: keep all
+
+Select top 3 stocks per sector by composite score.
+
+═══════════════════════════════════════════════
+OUTPUT FORMAT — follow exactly
+═══════════════════════════════════════════════
+
+CATEGORIES:
+
+[Sector Name] | Grade: [A/B/C/D] | Confidence: [Strong/Moderate/Cautious]
+Why: [one plain-English sentence tied to this specific user's profile]
+Driven by: [which signals scored highest — plain English]
+Watch out: [any conflicting signal or honest caveat — one sentence]
+
+(repeat for top 3 sectors)
+
+---
+
+STOCKS IN [Sector Name]:
+
+[TICKER] — [Full Company Name] | Grade: [A/B/C/D] | Mood: [Bullish/Neutral/Stable/Cautious]
+Why it fits you: [one sentence referencing user's specific risk/goal/horizon]
+Risk: [one plain-English risk flag]
+
+(repeat for top 3 stocks per sector, then move to next sector)
+
+---
+
+SIGNAL SUMMARY:
+News Mood: [one plain-English line]
+Company Health: [one plain-English line]
+Economy Vibe: [one plain-English line]
+Price Trend: [one plain-English line — remind user this is recent price action, not a forecast]
+Overall: [do all signals agree, or are there conflicts? Be honest in one sentence.]
+
+---
+
+NEXT STEP:
+[One concrete action this specific user can take today. Name a real platform or resource.]
+
+═══════════════════════════════════════════════
+LANGUAGE RULES — always apply
+═══════════════════════════════════════════════
+- Match language to experience level: {profile.experience_level}
+  - beginner: no tickers, explain every term, keep it very simple
+  - intermediate: tickers are fine, light explanations
+  - advanced: be direct, skip the hand-holding
+- Never show raw scores or numbers to the user
+- Never say "based on your profile" more than once
+- Never use jargon without immediately explaining it in the same sentence"""
 
     response = llm.invoke(
         [SystemMessage(content=SYSTEM_PROMPT)]
