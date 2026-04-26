@@ -77,6 +77,24 @@ class PortfolioPercent(str, Enum):
     FIFTY_PLUS = "50_plus_percent"
 
 
+class SignalGrade(str, Enum):
+    """Categorical grade mapped from a composite signal score (-1.0 to 1.0)."""
+    A = "A"  # Strong   ( 0.6 to  1.0)
+    B = "B"  # Moderate ( 0.2 to  0.59)
+    C = "C"  # Neutral  (-0.19 to 0.19)
+    D = "D"  # Weak     (-0.2  to -1.0)
+
+    @classmethod
+    def from_score(cls, score: float) -> "SignalGrade":
+        if score >= 0.6:
+            return cls.A
+        if score >= 0.2:
+            return cls.B
+        if score >= -0.19:
+            return cls.C
+        return cls.D
+
+
 # Main user profile
 
 class UserProfile(BaseModel):
