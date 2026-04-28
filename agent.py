@@ -452,15 +452,15 @@ def confirm_node(state: AgentState) -> dict:
         }
 
 
-def _compute_sector_score(sector: str, sentiment: dict, fundamentals: dict, momentum: dict) -> float:
+def _compute_sector_score(sector: str, sentiment: dict, fundamentals: dict, macro: dict, momentum: dict) -> float:
     """Pre-score a sector to find top candidates for stock-level analysis.
-    Weights: fundamentals 35%, sentiment 25%, macro placeholder 25%, momentum 15%.
-    Macro is neutral (0.0) here since it applies equally to all — the LLM factors it in synthesis.
+    Weights: fundamentals 35%, sentiment 25%, macro 25%, momentum 15%.
     """
     s = sentiment.get(sector, {}).get("sentiment_score", 0.0)
     f = fundamentals.get(sector, {}).get("health_score", 0.0)
+    c = macro.get("macro_score", 0.0)
     m = momentum.get(sector, {}).get("momentum_score", 0.0)
-    return (s * 0.25) + (f * 0.35) + (0.0 * 0.25) + (m * 0.15)
+    return (s * 0.25) + (f * 0.35) + (c * 0.25) + (m * 0.15)
 
 
 def analyze_node(state: AgentState) -> dict:
@@ -480,7 +480,7 @@ def analyze_node(state: AgentState) -> dict:
     momentum     = SECTOR_TOOLS[3].invoke({"sectors": sectors})   # Signal D
 
     # Pre-score to find top 3 sectors (LLM does full scoring in synthesize_node)
-    sector_scores = {s: _compute_sector_score(s, sentiment, fundamentals, momentum) for s in sectors}
+    sector_scores = {s: _compute_sector_score(s, sentiment, fundamentals, macro, momentum) for s in sectors}
     top_sectors = sorted(sector_scores, key=lambda x: sector_scores[x], reverse=True)[:3]
 
     # Pass 2 — stock-level signals for top sectors only
