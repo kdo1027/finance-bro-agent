@@ -77,6 +77,7 @@ class PortfolioPercent(str, Enum):
     FIFTY_PLUS = "50_plus_percent"
 
 
+
 # Main user profile
 
 class UserProfile(BaseModel):

@@ -183,7 +183,7 @@ def main():
 
         # If we just confirmed, auto-run analysis + synthesis
         if state["current_phase"] == "analyze":
-            print_system("\n[Running market analysis — calling Signals A, B, C, D...]")
+            print_system("\n[Running market analysis — sector signals (A-D), then stock signals (E-G) for top sectors...]")
 
             # Run analyze → synthesize (these are chained, no user input needed)
             state["messages"] = list(state["messages"])
