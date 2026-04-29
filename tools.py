@@ -4,16 +4,178 @@ tools.py — Signal tools for Signals A-D (sector level) and E-G (stock level).
 Sector-level tools run first (Pass 1) to grade and filter sectors.
 Stock-level tools run second (Pass 2) only for the top sectors that passed.
 
-Signal A (sector sentiment) and Signal E (stock sentiment) use the local
-fine-tuned FinBERT model via finbert_adapter. Signals B-D and F-G remain
-stubs — see inline comments for real API replacements.
+Signal A (sector sentiment) — fine-tuned FinBERT via finbert_adapter.
+Signal B (sector fundamentals) — Alpha Vantage OVERVIEW on sector ETFs.
+Signal C (macro) — FRED API: fed funds rate, CPI YoY, unemployment.
+Signal D (sector momentum) — Alpha Vantage TIME_SERIES_DAILY_ADJUSTED on sector ETFs.
+Signal E (stock sentiment) — fine-tuned FinBERT via finbert_adapter.
+Signal F (stock fundamentals) — Alpha Vantage OVERVIEW per ticker.
+Signal G (stock momentum) — Alpha Vantage TIME_SERIES_DAILY_ADJUSTED per ticker.
+
+Rate limits: Alpha Vantage free tier = 25 calls/day, 5 calls/min.
+Results cached to .cache/signals.json for 4 hours to stay within limits.
 """
 
+import json
+import os
+import time
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
+import requests
 from langchain_core.tools import tool
 
 from finbert_adapter import get_sector_sentiments, get_stock_sentiments
+
+# ── API keys (from .env) ───────────────────────────────────────────────────────
+ALPHA_VANTAGE_KEY = os.getenv("ALPHA_VANTAGE_KEY", "")
+FRED_API_KEY      = os.getenv("FRED_API_KEY", "")
+
+# ── Sector ETF mapping ─────────────────────────────────────────────────────────
+SECTOR_ETFS = {
+    "tech":        "XLK",
+    "healthcare":  "XLV",
+    "energy":      "XLE",
+    "financials":  "XLF",
+    "consumer":    "XLY",
+    "industrials": "XLI",
+}
+
+# ── 4-hour file cache to avoid burning 25 calls/day ───────────────────────────
+_CACHE_FILE    = Path(".cache/signals.json")
+_CACHE_TTL_HRS = 4
+
+
+def _cache_get(key: str):
+    if not _CACHE_FILE.exists():
+        return None
+    try:
+        data  = json.loads(_CACHE_FILE.read_text())
+        entry = data.get(key)
+        if not entry:
+            return None
+        if datetime.now() - datetime.fromisoformat(entry["cached_at"]) > timedelta(hours=_CACHE_TTL_HRS):
+            return None
+        return entry["value"]
+    except Exception:
+        return None
+
+
+def _cache_set(key: str, value):
+    _CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        data = json.loads(_CACHE_FILE.read_text()) if _CACHE_FILE.exists() else {}
+    except Exception:
+        data = {}
+    data[key] = {"value": value, "cached_at": datetime.now().isoformat()}
+    _CACHE_FILE.write_text(json.dumps(data, indent=2))
+
+
+# ── Alpha Vantage helpers ──────────────────────────────────────────────────────
+_AV_BASE      = "https://www.alphavantage.co/query"
+_last_av_call = 0.0
+
+
+def _av_get(function: str, symbol: str = None, extra: dict = None) -> dict:
+    """Call Alpha Vantage, spacing calls 12s apart to respect 5 calls/min limit."""
+    global _last_av_call
+    elapsed = time.time() - _last_av_call
+    if elapsed < 12:
+        time.sleep(12 - elapsed)
+    params = {"function": function, "apikey": ALPHA_VANTAGE_KEY}
+    if symbol:
+        params["symbol"] = symbol
+    if extra:
+        params.update(extra)
+    resp = requests.get(_AV_BASE, params=params, timeout=15)
+    _last_av_call = time.time()
+    resp.raise_for_status()
+    return resp.json()
+
+
+def _parse_overview(data: dict) -> dict:
+    """Convert Alpha Vantage OVERVIEW response to health_score schema."""
+    def safe_float(key, default=0.0):
+        try:
+            return float(data.get(key) or default)
+        except (ValueError, TypeError):
+            return default
+
+    pe         = safe_float("PERatio")
+    de         = safe_float("DebtEquityRatio")
+    rev_growth = safe_float("QuarterlyRevenueGrowthYOY") * 100
+    beta       = safe_float("Beta", 1.0)
+
+    pe_score     = 0.4 if 8 <= pe <= 25 else (0.1 if pe < 45 else -0.3)
+    de_score     = 0.3 if de < 0.5 else (0.1 if de < 1.2 else -0.2)
+    growth_score = 0.4 if rev_growth > 10 else (0.2 if rev_growth > 0 else -0.3)
+    health_score = round(min(1.0, max(-1.0, pe_score + de_score + growth_score)), 3)
+
+    return {
+        "pe_ratio":           round(pe, 1),
+        "debt_to_equity":     round(de, 2),
+        "revenue_growth_pct": round(rev_growth, 1),
+        "health_score":       health_score,
+        "health_label":       ("healthy" if health_score >= 0.5 else
+                               "fair"    if health_score >= 0.2 else
+                               "mixed"   if health_score >= -0.1 else "weak"),
+        "volatility":         "high" if beta > 1.3 else "low" if beta < 0.7 else "medium",
+        "beta":               round(beta, 2),
+        "source":             "Alpha Vantage OVERVIEW",
+    }
+
+
+def _parse_price_changes(data: dict, symbol: str) -> dict:
+    """Compute 5/10/30-day % changes from TIME_SERIES_DAILY_ADJUSTED."""
+    series = data.get("Time Series (Daily)", {})
+    dates  = sorted(series.keys(), reverse=True)
+    if not dates:
+        return {"change_5d_pct": 0.0, "change_10d_pct": 0.0, "change_30d_pct": 0.0,
+                "momentum_score": 0.0, "trend": "flat", "source": "Alpha Vantage (no data)"}
+
+    current = float(series[dates[0]]["5. adjusted close"])
+
+    def pct(n):
+        if len(dates) > n:
+            past = float(series[dates[n]]["5. adjusted close"])
+            return round((current - past) / past * 100, 2)
+        return 0.0
+
+    c5, c10, c30 = pct(5), pct(10), pct(30)
+    raw   = (c5 * 0.5 + c10 * 0.3 + c30 * 0.2) / 10
+    score = round(max(-1.0, min(1.0, raw)), 3)
+
+    return {
+        "symbol":         symbol,
+        "change_5d_pct":  c5,
+        "change_10d_pct": c10,
+        "change_30d_pct": c30,
+        "momentum_score": score,
+        "trend":          "uptrend" if score > 0.2 else "downtrend" if score < -0.2 else "flat",
+        "source":         "Alpha Vantage TIME_SERIES_DAILY_ADJUSTED",
+    }
+
+
+# ── FRED helpers ───────────────────────────────────────────────────────────────
+_FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
+
+
+def _fred_latest(series_id: str) -> float:
+    params = {"series_id": series_id, "api_key": FRED_API_KEY,
+              "sort_order": "desc", "limit": 1, "file_type": "json"}
+    resp = requests.get(_FRED_BASE, params=params, timeout=10)
+    resp.raise_for_status()
+    obs = resp.json().get("observations", [])
+    return float(obs[0]["value"]) if obs else 0.0
+
+
+def _fred_yoy(series_id: str) -> float:
+    params = {"series_id": series_id, "api_key": FRED_API_KEY,
+              "sort_order": "desc", "limit": 13, "file_type": "json", "units": "pc1"}
+    resp = requests.get(_FRED_BASE, params=params, timeout=10)
+    resp.raise_for_status()
+    obs = resp.json().get("observations", [])
+    return float(obs[0]["value"]) if obs else 0.0
 
 
 def _ts(hours_ago: float) -> str:
@@ -223,86 +385,101 @@ def get_sentiment_signal(sectors: list[str]) -> dict:
 
 @tool
 def get_fundamentals_signal(sectors: list[str]) -> dict:
-    """Signal B: Fundamental financial health for each sector.
+    """Signal B: Fundamental health for each sector via Alpha Vantage OVERVIEW on sector ETF.
 
-    Args:
-        sectors: List of sector names.
-
-    Returns:
-        Dict mapping sector to P/E ratio, debt-to-equity, revenue growth, and health score.
-        health_score is -1.0 to 1.0 (positive = healthy, negative = stretched/weak).
+    Uses the sector ETF (XLK, XLV, XLE, XLF, XLY, XLI) as a proxy for sector health.
+    Cached 4 hours to stay within the 25 calls/day free-tier limit.
     """
-    # STUB — replace with SimFin or Alpha Vantage sector aggregates
-    stub_data = {
-        "tech":        {"pe_ratio": 28.5, "debt_to_equity": 0.45, "revenue_growth_pct": 12, "health_score":  0.55, "health_label": "healthy but stretched"},
-        "healthcare":  {"pe_ratio": 18.2, "debt_to_equity": 0.35, "revenue_growth_pct":  8, "health_score":  0.70, "health_label": "healthy"},
-        "energy":      {"pe_ratio": 12.1, "debt_to_equity": 0.60, "revenue_growth_pct": -3, "health_score": -0.10, "health_label": "mixed"},
-        "financials":  {"pe_ratio": 15.0, "debt_to_equity": 0.80, "revenue_growth_pct":  5, "health_score":  0.30, "health_label": "fair"},
-        "consumer":    {"pe_ratio": 22.0, "debt_to_equity": 0.50, "revenue_growth_pct":  4, "health_score":  0.25, "health_label": "fair"},
-        "industrials": {"pe_ratio": 19.5, "debt_to_equity": 0.40, "revenue_growth_pct":  6, "health_score":  0.40, "health_label": "healthy"},
-    }
     results = {}
     for sector in sectors:
-        data = stub_data.get(sector.lower(), {
-            "pe_ratio": 20.0, "debt_to_equity": 0.50, "revenue_growth_pct": 5,
-            "health_score": 0.0, "health_label": "unknown"
-        })
-        data["source"] = "stub — replace with SimFin/Alpha Vantage"
-        results[sector] = data
+        etf       = SECTOR_ETFS.get(sector.lower())
+        cache_key = f"fundamentals_sector_{etf}"
+        cached    = _cache_get(cache_key)
+        if cached:
+            results[sector] = cached
+            continue
+        if not etf:
+            results[sector] = {"health_score": 0.0, "health_label": "unknown", "source": "no ETF mapping"}
+            continue
+        try:
+            parsed = _parse_overview(_av_get("OVERVIEW", symbol=etf))
+            _cache_set(cache_key, parsed)
+            results[sector] = parsed
+        except Exception as e:
+            results[sector] = {"health_score": 0.0, "health_label": "error",
+                               "error": str(e), "source": "Alpha Vantage (error)"}
     return results
 
 
 @tool
 def get_macro_signal() -> dict:
-    """Signal C: Macroeconomic environment — applies globally to all sectors.
+    """Signal C: Macroeconomic environment via FRED API.
 
-    Returns:
-        Dict with interest rate, inflation, unemployment, and a macro_score (-1.0 to 1.0).
-        Positive score = economy supports investment; negative = headwinds.
+    Fetches live Federal Funds Rate, CPI YoY %, and Unemployment Rate.
+    Applies equally to all sectors — one global macro score.
+    Cached 4 hours (macro data changes slowly).
     """
-    # STUB — replace with FRED API
-    return {
-        "fed_funds_rate": 5.25,
-        "cpi_yoy_pct": 3.2,
-        "unemployment_rate": 3.8,
-        "macro_score": 0.10,
-        "plain_summary": "Rates are still high and inflation is cooling but not gone. "
-                         "This favors stable, value-oriented companies over fast-growing ones.",
-        "source": "stub — replace with FRED API",
-    }
+    cached = _cache_get("macro_fred")
+    if cached:
+        return cached
+    try:
+        fed_rate     = _fred_latest("FEDFUNDS")
+        cpi_yoy      = _fred_yoy("CPIAUCSL")
+        unemployment = _fred_latest("UNRATE")
+
+        rate_score   = -0.4 if fed_rate > 5.0 else (-0.2 if fed_rate > 3.0 else 0.2)
+        cpi_score    = -0.3 if cpi_yoy > 4.0  else (-0.1 if cpi_yoy > 2.5  else 0.2)
+        unemp_score  =  0.2 if unemployment < 4.5 else (0.0 if unemployment < 6.0 else -0.2)
+        macro_score  = round(max(-1.0, min(1.0, rate_score + cpi_score + unemp_score)), 3)
+
+        result = {
+            "fed_funds_rate":    fed_rate,
+            "cpi_yoy_pct":       round(cpi_yoy, 2),
+            "unemployment_rate": unemployment,
+            "macro_score":       macro_score,
+            "plain_summary": (
+                f"Interest rates are {'high' if fed_rate > 4 else 'moderate'} at {fed_rate}%. "
+                f"Inflation is {'above target' if cpi_yoy > 2.5 else 'under control'} "
+                f"at {cpi_yoy:.1f}% year-over-year. "
+                f"Unemployment is {'low' if unemployment < 5 else 'elevated'} at {unemployment}%."
+            ),
+            "source": "FRED API",
+        }
+        _cache_set("macro_fred", result)
+        return result
+    except Exception as e:
+        return {"fed_funds_rate": 0.0, "cpi_yoy_pct": 0.0, "unemployment_rate": 0.0,
+                "macro_score": 0.0, "plain_summary": "Macro data unavailable.",
+                "error": str(e), "source": "FRED API (error)"}
 
 
 @tool
 def get_momentum_signal(sectors: list[str]) -> dict:
-    """Signal D: Recent price trend for each sector ETF.
+    """Signal D: Recent price trend for each sector ETF via Alpha Vantage.
 
-    Momentum = price action only. Shows how much the sector ETF price
-    has moved over the last 5, 10, and 30 days. This is a supporting
-    signal — it reflects what already happened, not what will happen.
-
-    Args:
-        sectors: List of sector names.
-
-    Returns:
-        Dict mapping sector to price change percentages and a momentum_score (-1.0 to 1.0).
+    Price action only — 5, 10, 30-day % changes. Supporting signal (weight: 15%).
+    Replaces yfinance with Alpha Vantage TIME_SERIES_DAILY_ADJUSTED. Cached 4 hours.
     """
-    # STUB — replace with yfinance on sector ETFs (XLK, XLV, XLE, XLF, etc.)
-    stub_data = {
-        "tech":        {"etf": "XLK", "change_5d_pct":  2.1, "change_10d_pct":  3.8, "change_30d_pct":  5.2, "momentum_score":  0.60, "trend": "uptrend"},
-        "healthcare":  {"etf": "XLV", "change_5d_pct": -0.4, "change_10d_pct": -1.2, "change_30d_pct": -2.1, "momentum_score": -0.20, "trend": "downtrend"},
-        "energy":      {"etf": "XLE", "change_5d_pct": -1.1, "change_10d_pct": -2.5, "change_30d_pct": -3.8, "momentum_score": -0.35, "trend": "downtrend"},
-        "financials":  {"etf": "XLF", "change_5d_pct":  0.8, "change_10d_pct":  1.5, "change_30d_pct":  1.9, "momentum_score":  0.20, "trend": "slight uptrend"},
-        "consumer":    {"etf": "XLY", "change_5d_pct":  0.3, "change_10d_pct":  0.9, "change_30d_pct":  1.2, "momentum_score":  0.15, "trend": "flat"},
-        "industrials": {"etf": "XLI", "change_5d_pct":  1.0, "change_10d_pct":  2.0, "change_30d_pct":  3.1, "momentum_score":  0.35, "trend": "uptrend"},
-    }
     results = {}
     for sector in sectors:
-        data = stub_data.get(sector.lower(), {
-            "etf": "N/A", "change_5d_pct": 0.0, "change_10d_pct": 0.0,
-            "change_30d_pct": 0.0, "momentum_score": 0.0, "trend": "flat"
-        })
-        data["source"] = "stub — replace with yfinance"
-        results[sector] = data
+        etf       = SECTOR_ETFS.get(sector.lower())
+        cache_key = f"momentum_sector_{etf}"
+        cached    = _cache_get(cache_key)
+        if cached:
+            results[sector] = cached
+            continue
+        if not etf:
+            results[sector] = {"momentum_score": 0.0, "trend": "flat", "source": "no ETF mapping"}
+            continue
+        try:
+            data   = _av_get("TIME_SERIES_DAILY_ADJUSTED", symbol=etf, extra={"outputsize": "compact"})
+            parsed = _parse_price_changes(data, etf)
+            parsed["etf"] = etf
+            _cache_set(cache_key, parsed)
+            results[sector] = parsed
+        except Exception as e:
+            results[sector] = {"momentum_score": 0.0, "trend": "flat",
+                               "error": str(e), "source": "Alpha Vantage (error)"}
     return results
 
 
@@ -335,76 +512,50 @@ def get_stock_sentiment_signal(tickers: list[str]) -> dict:
 
 @tool
 def get_stock_fundamentals_signal(tickers: list[str]) -> dict:
-    """Signal F: Fundamental financial health for individual stocks.
+    """Signal F: Fundamental health for individual stocks via Alpha Vantage OVERVIEW.
 
-    Args:
-        tickers: List of stock tickers.
-
-    Returns:
-        Dict mapping ticker to P/E, debt-to-equity, revenue growth, and health score.
+    Cached per ticker for 4 hours to stay within the 25 calls/day free-tier limit.
     """
-    # STUB — replace with SimFin or Alpha Vantage per-stock data
-    stub_data = {
-        "NVDA":  {"pe_ratio": 55.0, "debt_to_equity": 0.40, "revenue_growth_pct": 122, "health_score":  0.75, "volatility": "high"},
-        "MSFT":  {"pe_ratio": 32.0, "debt_to_equity": 0.35, "revenue_growth_pct":  17, "health_score":  0.80, "volatility": "medium"},
-        "AAPL":  {"pe_ratio": 28.0, "debt_to_equity": 1.80, "revenue_growth_pct":   2, "health_score":  0.60, "volatility": "low"},
-        "UNH":   {"pe_ratio": 20.0, "debt_to_equity": 0.60, "revenue_growth_pct":  12, "health_score":  0.65, "volatility": "low"},
-        "JNJ":   {"pe_ratio": 16.5, "debt_to_equity": 0.45, "revenue_growth_pct":   4, "health_score":  0.55, "volatility": "low"},
-        "LLY":   {"pe_ratio": 60.0, "debt_to_equity": 1.20, "revenue_growth_pct":  36, "health_score":  0.70, "volatility": "medium"},
-        "XOM":   {"pe_ratio": 13.0, "debt_to_equity": 0.20, "revenue_growth_pct":  -5, "health_score":  0.20, "volatility": "medium"},
-        "CVX":   {"pe_ratio": 12.5, "debt_to_equity": 0.15, "revenue_growth_pct":  -3, "health_score":  0.25, "volatility": "medium"},
-        "COP":   {"pe_ratio": 11.0, "debt_to_equity": 0.30, "revenue_growth_pct":  -8, "health_score":  0.10, "volatility": "high"},
-        "JPM":   {"pe_ratio": 12.0, "debt_to_equity": 1.20, "revenue_growth_pct":   8, "health_score":  0.55, "volatility": "medium"},
-        "BAC":   {"pe_ratio": 11.5, "debt_to_equity": 1.10, "revenue_growth_pct":   5, "health_score":  0.45, "volatility": "medium"},
-        "GS":    {"pe_ratio": 13.5, "debt_to_equity": 2.50, "revenue_growth_pct":  10, "health_score":  0.50, "volatility": "high"},
-    }
     results = {}
     for ticker in tickers:
-        data = stub_data.get(ticker.upper(), {
-            "pe_ratio": 20.0, "debt_to_equity": 0.50, "revenue_growth_pct": 5,
-            "health_score": 0.0, "volatility": "medium"
-        })
-        data["source"] = "stub — replace with SimFin/Alpha Vantage"
-        results[ticker] = data
+        cache_key = f"fundamentals_stock_{ticker.upper()}"
+        cached    = _cache_get(cache_key)
+        if cached:
+            results[ticker] = cached
+            continue
+        try:
+            parsed = _parse_overview(_av_get("OVERVIEW", symbol=ticker.upper()))
+            _cache_set(cache_key, parsed)
+            results[ticker] = parsed
+        except Exception as e:
+            results[ticker] = {"health_score": 0.0, "health_label": "error",
+                               "error": str(e), "source": "Alpha Vantage (error)"}
     return results
 
 
 @tool
 def get_stock_momentum_signal(tickers: list[str]) -> dict:
-    """Signal G: Recent price trend for individual stocks.
+    """Signal G: Recent price trend for individual stocks via Alpha Vantage.
 
-    Price action only — how much each stock has moved in the last 5, 10, 30 days.
-    Low weight signal (15%) — reflects what already happened, not a forecast.
-
-    Args:
-        tickers: List of stock tickers.
-
-    Returns:
-        Dict mapping ticker to price change percentages and momentum score.
+    Price action only — 5, 10, 30-day % changes. Supporting signal (weight: 15%).
+    Replaces yfinance with Alpha Vantage TIME_SERIES_DAILY_ADJUSTED. Cached per ticker.
     """
-    # STUB — replace with yfinance per-stock price history
-    stub_data = {
-        "NVDA":  {"change_5d_pct":  4.2, "change_10d_pct":  7.5, "change_30d_pct": 15.3, "momentum_score":  0.80, "trend": "strong uptrend"},
-        "MSFT":  {"change_5d_pct":  1.5, "change_10d_pct":  2.8, "change_30d_pct":  4.1, "momentum_score":  0.45, "trend": "uptrend"},
-        "AAPL":  {"change_5d_pct":  0.8, "change_10d_pct":  1.2, "change_30d_pct":  2.0, "momentum_score":  0.20, "trend": "slight uptrend"},
-        "UNH":   {"change_5d_pct": -1.0, "change_10d_pct": -2.1, "change_30d_pct": -3.5, "momentum_score": -0.25, "trend": "downtrend"},
-        "JNJ":   {"change_5d_pct": -0.5, "change_10d_pct": -0.8, "change_30d_pct": -1.5, "momentum_score": -0.10, "trend": "flat"},
-        "LLY":   {"change_5d_pct":  3.0, "change_10d_pct":  5.5, "change_30d_pct":  9.8, "momentum_score":  0.65, "trend": "uptrend"},
-        "XOM":   {"change_5d_pct": -0.8, "change_10d_pct": -1.5, "change_30d_pct": -3.0, "momentum_score": -0.20, "trend": "downtrend"},
-        "CVX":   {"change_5d_pct": -0.5, "change_10d_pct": -1.2, "change_30d_pct": -2.5, "momentum_score": -0.15, "trend": "slight downtrend"},
-        "COP":   {"change_5d_pct": -1.2, "change_10d_pct": -2.8, "change_30d_pct": -5.1, "momentum_score": -0.40, "trend": "downtrend"},
-        "JPM":   {"change_5d_pct":  1.2, "change_10d_pct":  2.0, "change_30d_pct":  3.8, "momentum_score":  0.35, "trend": "uptrend"},
-        "BAC":   {"change_5d_pct":  0.9, "change_10d_pct":  1.5, "change_30d_pct":  2.5, "momentum_score":  0.25, "trend": "uptrend"},
-        "GS":    {"change_5d_pct":  1.5, "change_10d_pct":  2.5, "change_30d_pct":  4.2, "momentum_score":  0.40, "trend": "uptrend"},
-    }
     results = {}
     for ticker in tickers:
-        data = stub_data.get(ticker.upper(), {
-            "change_5d_pct": 0.0, "change_10d_pct": 0.0, "change_30d_pct": 0.0,
-            "momentum_score": 0.0, "trend": "flat"
-        })
-        data["source"] = "stub — replace with yfinance"
-        results[ticker] = data
+        cache_key = f"momentum_stock_{ticker.upper()}"
+        cached    = _cache_get(cache_key)
+        if cached:
+            results[ticker] = cached
+            continue
+        try:
+            data   = _av_get("TIME_SERIES_DAILY_ADJUSTED", symbol=ticker.upper(),
+                             extra={"outputsize": "compact"})
+            parsed = _parse_price_changes(data, ticker.upper())
+            _cache_set(cache_key, parsed)
+            results[ticker] = parsed
+        except Exception as e:
+            results[ticker] = {"momentum_score": 0.0, "trend": "flat",
+                               "error": str(e), "source": "Alpha Vantage (error)"}
     return results
 
 
