@@ -1,13 +1,168 @@
 """
-tools.py — Stub tools for Signals A-D (sector level) and E-G (stock level).
+tools.py — Signal tools for Signals A-D (sector level) and E-G (stock level).
 
 Sector-level tools run first (Pass 1) to grade and filter sectors.
 Stock-level tools run second (Pass 2) only for the top sectors that passed.
 
-Each tool returns fake data for now — see inline comments for real API replacements.
+Signal A (sector sentiment) and Signal E (stock sentiment) use the local
+fine-tuned FinBERT model via finbert_adapter. Signals B-D and F-G remain
+stubs — see inline comments for real API replacements.
 """
 
+from datetime import datetime, timedelta, timezone
+
 from langchain_core.tools import tool
+
+from finbert_adapter import get_sector_sentiments, get_stock_sentiments
+
+
+def _ts(hours_ago: float) -> str:
+    """Return an ISO-8601 UTC timestamp for N hours ago."""
+    dt = datetime.now(tz=timezone.utc) - timedelta(hours=hours_ago)
+    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+# Stub headlines fed to FinBERT for Signal A (sector-level sentiment).
+# Replace the list values with live NewsAPI headlines keyed by FinBERT sector name.
+_SECTOR_HEADLINES: dict[str, list[dict]] = {
+    "technology": [
+        {"text": "NVIDIA reports record quarterly revenue driven by surging AI chip demand", "timestamp": _ts(2)},
+        {"text": "Microsoft Azure cloud growth accelerates as enterprise AI adoption rises", "timestamp": _ts(5)},
+        {"text": "Apple faces slowing iPhone sales in key China market amid economic headwinds", "timestamp": _ts(9)},
+        {"text": "Semiconductor stocks rally after AMD posts strong earnings and raises guidance", "timestamp": _ts(14)},
+        {"text": "Google DeepMind announces breakthrough in AI reasoning capabilities", "timestamp": _ts(20)},
+    ],
+    "healthcare": [
+        {"text": "Eli Lilly obesity drug Zepbound shows strong demand driving revenue growth", "timestamp": _ts(3)},
+        {"text": "FDA approves new Pfizer vaccine for respiratory virus following clinical trial success", "timestamp": _ts(7)},
+        {"text": "UnitedHealth raises full-year earnings outlook on strong membership growth", "timestamp": _ts(11)},
+        {"text": "Johnson and Johnson faces new litigation over talc products", "timestamp": _ts(16)},
+        {"text": "Biotech sector gains as new cancer therapeutics show promising trial results", "timestamp": _ts(22)},
+    ],
+    "energy": [
+        {"text": "OPEC maintains production cuts as crude oil prices stabilize near multi-month lows", "timestamp": _ts(1)},
+        {"text": "ExxonMobil beats earnings estimates on strong refinery margins", "timestamp": _ts(6)},
+        {"text": "Natural gas futures fall sharply on warmer-than-expected winter forecasts", "timestamp": _ts(10)},
+        {"text": "Chevron expands renewable energy investments with new solar partnership", "timestamp": _ts(15)},
+        {"text": "Oil prices drop on rising US crude inventories and demand concerns", "timestamp": _ts(21)},
+    ],
+    "financials": [
+        {"text": "JPMorgan Chase reports record profit on strong investment banking revenue", "timestamp": _ts(2)},
+        {"text": "Federal Reserve holds interest rates steady signaling cautious outlook", "timestamp": _ts(6)},
+        {"text": "Goldman Sachs trading revenue surges amid market volatility", "timestamp": _ts(10)},
+        {"text": "Bank of America net interest income falls short of analyst expectations", "timestamp": _ts(17)},
+        {"text": "Credit card delinquencies rise as consumer financial stress increases", "timestamp": _ts(23)},
+    ],
+    "consumer": [
+        {"text": "Amazon Prime membership growth accelerates boosting e-commerce revenue", "timestamp": _ts(3)},
+        {"text": "McDonald's global same-store sales beat estimates on value menu strength", "timestamp": _ts(8)},
+        {"text": "Home Depot cuts outlook citing softer housing market and cautious consumer spending", "timestamp": _ts(12)},
+        {"text": "Walmart gains market share as budget-conscious consumers trade down", "timestamp": _ts(18)},
+        {"text": "Consumer confidence index rises for third consecutive month", "timestamp": _ts(24)},
+    ],
+    "industrials": [
+        {"text": "Caterpillar construction equipment demand remains robust on infrastructure spending", "timestamp": _ts(4)},
+        {"text": "Boeing faces ongoing production challenges with 737 MAX delivery delays", "timestamp": _ts(8)},
+        {"text": "Honeywell raises guidance on strong aerospace and defense orders", "timestamp": _ts(13)},
+        {"text": "UPS warns of softer package volumes as e-commerce growth moderates", "timestamp": _ts(19)},
+        {"text": "US manufacturing PMI expands for second straight month on new orders", "timestamp": _ts(25)},
+    ],
+}
+
+# Stub headlines fed to FinBERT for Signal E (stock-level sentiment).
+# Replace with live NewsAPI queries filtered by company name or ticker.
+_STOCK_HEADLINES: dict[str, list[str]] = {
+    "NVDA": [
+        "NVIDIA dominates AI chip market with Blackwell GPU demand exceeding supply",
+        "NVIDIA data center revenue hits record high as hyperscalers expand AI infrastructure",
+        "NVIDIA stock surges after analyst upgrades on strong forward guidance",
+    ],
+    "MSFT": [
+        "Microsoft Copilot AI integration drives Office 365 subscription growth",
+        "Microsoft Azure revenue growth beats expectations on AI workload demand",
+        "Microsoft raises dividend as cloud business generates strong free cash flow",
+    ],
+    "AAPL": [
+        "Apple iPhone 16 sales disappoint in China amid local competition",
+        "Apple services revenue grows steadily offsetting hardware weakness",
+        "Apple launches new AI features in iOS update to spur upgrade cycle",
+    ],
+    "UNH": [
+        "UnitedHealth raises full-year earnings guidance on strong managed care margins",
+        "UnitedHealth faces federal investigation into Medicare billing practices",
+        "UnitedHealth membership growth exceeds expectations across commercial plans",
+    ],
+    "JNJ": [
+        "Johnson and Johnson MedTech segment posts solid growth on surgical procedure recovery",
+        "Johnson and Johnson reaches talc settlement reducing long-running legal uncertainty",
+        "JNJ pharmaceutical pipeline advances with positive late-stage trial results",
+    ],
+    "LLY": [
+        "Eli Lilly Mounjaro and Zepbound sales surge well above analyst forecasts",
+        "Eli Lilly expands manufacturing capacity to meet overwhelming GLP-1 drug demand",
+        "Eli Lilly obesity drug trial shows additional cardiovascular benefits",
+    ],
+    "XOM": [
+        "ExxonMobil earnings beat estimates on strong downstream refining margins",
+        "ExxonMobil increases shareholder returns with expanded buyback program",
+        "ExxonMobil faces pressure as crude oil prices slide on demand concerns",
+    ],
+    "CVX": [
+        "Chevron free cash flow remains strong supporting dividend growth",
+        "Chevron Hess acquisition faces regulatory scrutiny delaying close",
+        "Chevron cuts capital spending forecast amid lower oil price environment",
+    ],
+    "COP": [
+        "ConocoPhillips production volumes disappoint on operational disruptions",
+        "ConocoPhillips completes Marathon Oil acquisition expanding US shale footprint",
+        "ConocoPhillips warns lower oil prices will pressure 2025 cash flow",
+    ],
+    "JPM": [
+        "JPMorgan Chase investment banking fees surge on renewed deal activity",
+        "JPMorgan posts record annual profit driven by high interest rates",
+        "JPMorgan CEO warns of elevated risks from geopolitical and fiscal uncertainty",
+    ],
+    "BAC": [
+        "Bank of America net interest income stabilizes after months of pressure",
+        "Bank of America wealth management division posts record client assets",
+        "Bank of America loan loss provisions rise as consumer credit quality softens",
+    ],
+    "GS": [
+        "Goldman Sachs trading desk delivers strongest quarter in two years",
+        "Goldman Sachs asset and wealth management revenue grows on market appreciation",
+        "Goldman Sachs investment banking pipeline strengthens as IPO market reopens",
+    ],
+    "AMZN": [
+        "Amazon AWS cloud revenue accelerates on AI infrastructure spending boom",
+        "Amazon advertising business grows rapidly becoming major profit contributor",
+        "Amazon Prime Video gains subscribers following NFL streaming rights deal",
+    ],
+    "HD": [
+        "Home Depot revenue misses estimates as high mortgage rates dampen renovation demand",
+        "Home Depot professional contractor business remains resilient amid soft DIY sales",
+        "Home Depot acquires SRS Distribution to expand pro customer reach",
+    ],
+    "MCD": [
+        "McDonald's value menu drives traffic recovery after consumer pullback",
+        "McDonald's international markets show solid comparable sales growth",
+        "McDonald's faces ongoing consumer pushback over elevated menu prices",
+    ],
+    "CAT": [
+        "Caterpillar construction segment benefits from sustained US infrastructure investment",
+        "Caterpillar raises dividend reflecting confidence in long-term earnings power",
+        "Caterpillar dealer inventory normalization creates near-term order headwind",
+    ],
+    "HON": [
+        "Honeywell aerospace division backlog hits record driven by commercial aviation recovery",
+        "Honeywell raises full-year guidance on strong industrial automation demand",
+        "Honeywell explores separation of business units to unlock shareholder value",
+    ],
+    "UPS": [
+        "UPS volume declines as customers shift to cheaper delivery alternatives",
+        "UPS restructuring program targets cost reductions to protect margins",
+        "UPS international package business shows modest recovery in European markets",
+    ],
+}
 
 
 # Maps each sector to its representative stocks for Pass 2 analysis
@@ -37,7 +192,7 @@ SECTOR_STOCKS = {
 
 @tool
 def get_sentiment_signal(sectors: list[str]) -> dict:
-    """Signal A: News sentiment scores for each sector.
+    """Signal A: News sentiment scores for each sector via fine-tuned FinBERT.
 
     Args:
         sectors: List of sector names (e.g. ["tech", "healthcare", "energy"])
@@ -46,25 +201,22 @@ def get_sentiment_signal(sectors: list[str]) -> dict:
         Dict mapping sector to sentiment score (-1.0 to 1.0) and label.
         Score > 0.2 = positive, < -0.2 = negative, else neutral.
     """
-    # STUB — replace with NewsAPI headlines + FinBERT inference
-    stub_scores = {
-        "tech":        0.74,
-        "healthcare":  0.31,
-        "energy":     -0.12,
-        "financials":  0.45,
-        "consumer":    0.22,
-        "industrials": 0.15,
-        "real_estate":-0.08,
-        "utilities":   0.05,
-    }
+    # Gather headlines for the requested sectors (keyed by FinBERT sector name)
+    headlines = []
+    for sector in sectors:
+        fb_sector = "technology" if sector == "tech" else sector
+        headlines.extend(_SECTOR_HEADLINES.get(fb_sector, []))
+
+    scores = get_sector_sentiments(sectors, headlines)
+
     results = {}
     for sector in sectors:
-        score = stub_scores.get(sector.lower(), 0.0)
+        score = scores[sector]
         results[sector] = {
             "sentiment_score": score,
             "label": "positive" if score > 0.2 else "negative" if score < -0.2 else "neutral",
-            "headline_count": 25,
-            "source": "stub — replace with NewsAPI + FinBERT",
+            "headline_count": len(_SECTOR_HEADLINES.get("technology" if sector == "tech" else sector, [])),
+            "source": "finbert_finetuned",
         }
     return results
 
@@ -158,7 +310,7 @@ def get_momentum_signal(sectors: list[str]) -> dict:
 
 @tool
 def get_stock_sentiment_signal(tickers: list[str]) -> dict:
-    """Signal E: News sentiment for individual stocks.
+    """Signal E: News sentiment for individual stocks via fine-tuned FinBERT.
 
     Args:
         tickers: List of stock tickers (e.g. ["NVDA", "MSFT", "AAPL"])
@@ -166,22 +318,17 @@ def get_stock_sentiment_signal(tickers: list[str]) -> dict:
     Returns:
         Dict mapping ticker to sentiment score and label.
     """
-    # STUB — replace with NewsAPI stock-specific headlines + FinBERT
-    stub_scores = {
-        "NVDA":  0.82, "MSFT":  0.60, "AAPL":  0.45,
-        "UNH":   0.38, "JNJ":   0.28, "LLY":   0.55,
-        "XOM":  -0.15, "CVX":  -0.08, "COP":  -0.22,
-        "JPM":   0.50, "BAC":   0.35, "GS":    0.40,
-        "AMZN":  0.65, "HD":    0.30, "MCD":   0.20,
-        "CAT":   0.45, "HON":   0.38, "UPS":   0.25,
-    }
+    ticker_headlines = {t.upper(): _STOCK_HEADLINES.get(t.upper(), []) for t in tickers}
+    scores = get_stock_sentiments(ticker_headlines)
+
     results = {}
     for ticker in tickers:
-        score = stub_scores.get(ticker.upper(), 0.0)
+        score = scores[ticker.upper()]
         results[ticker] = {
             "sentiment_score": score,
             "label": "positive" if score > 0.2 else "negative" if score < -0.2 else "neutral",
-            "source": "stub — replace with NewsAPI + FinBERT",
+            "headline_count": len(_STOCK_HEADLINES.get(ticker.upper(), [])),
+            "source": "finbert_finetuned",
         }
     return results
 
