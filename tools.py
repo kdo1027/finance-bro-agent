@@ -184,9 +184,109 @@ def _ts(hours_ago: float) -> str:
     return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-# Stub headlines fed to FinBERT for Signal A (sector-level sentiment).
-# Replace the list values with live NewsAPI headlines keyed by FinBERT sector name.
-_SECTOR_HEADLINES: dict[str, list[dict]] = {
+def _parse_av_ts(av_ts: str) -> str:
+    """Convert Alpha Vantage timestamp (e.g. '20240101T120000') to ISO-8601."""
+    try:
+        dt = datetime.strptime(av_ts, "%Y%m%dT%H%M%S")
+        return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    except Exception:
+        return _ts(0)
+
+
+# Maps finance-bro sector names to Alpha Vantage NEWS_SENTIMENT topic strings
+AV_NEWS_TOPICS = {
+    "tech":        "technology",
+    "healthcare":  "life_sciences",
+    "energy":      "energy_transportation",
+    "financials":  "finance",
+    "consumer":    "retail_wholesale",
+    "industrials": "manufacturing",
+}
+
+
+def _fetch_sector_headlines(sector: str, limit: int = 5) -> list[dict]:
+    """Fetch live headlines for a sector from Alpha Vantage NEWS_SENTIMENT.
+
+    Returns list of {"text": str, "timestamp": ISO str} for FinBERT.
+    Falls back to curated static headlines if API call fails or returns nothing.
+    Cached for 1 hour (news changes faster than fundamentals).
+    """
+    cache_key = f"news_sector_{sector}"
+    cached = _cache_get(cache_key)
+    if cached:
+        return cached
+
+    topic = AV_NEWS_TOPICS.get(sector.lower())
+    if topic and ALPHA_VANTAGE_KEY:
+        try:
+            data     = _av_get("NEWS_SENTIMENT", extra={"topics": topic, "limit": limit})
+            articles = data.get("feed", [])
+            if articles:
+                headlines = [
+                    {
+                        "text":      a.get("title", ""),
+                        "timestamp": _parse_av_ts(a.get("time_published", "")),
+                    }
+                    for a in articles if a.get("title")
+                ]
+                # Cache with 1-hour TTL (override the 4-hour default)
+                _CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+                try:
+                    raw = json.loads(_CACHE_FILE.read_text()) if _CACHE_FILE.exists() else {}
+                except Exception:
+                    raw = {}
+                raw[cache_key] = {
+                    "value":     headlines,
+                    "cached_at": (datetime.now(tz=timezone.utc) - timedelta(hours=_CACHE_TTL_HRS - 1)).isoformat(),
+                }
+                _CACHE_FILE.write_text(json.dumps(raw, indent=2))
+                return headlines
+        except Exception:
+            pass  # fall through to static fallback
+
+    # Fallback: curated static headlines (always available)
+    fb_sector = "technology" if sector == "tech" else sector
+    return _FALLBACK_SECTOR_HEADLINES.get(fb_sector, [])
+
+
+def _fetch_stock_headlines(ticker: str, limit: int = 3) -> list[str]:
+    """Fetch live headlines for a stock ticker from Alpha Vantage NEWS_SENTIMENT.
+
+    Returns list of headline strings for FinBERT.
+    Falls back to curated static headlines if API call fails or returns nothing.
+    Cached for 1 hour.
+    """
+    cache_key = f"news_stock_{ticker.upper()}"
+    cached = _cache_get(cache_key)
+    if cached:
+        return cached
+
+    if ALPHA_VANTAGE_KEY:
+        try:
+            data     = _av_get("NEWS_SENTIMENT", extra={"tickers": ticker.upper(), "limit": limit})
+            articles = data.get("feed", [])
+            if articles:
+                headlines = [a["title"] for a in articles if a.get("title")]
+                # Cache with 1-hour TTL
+                _CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+                try:
+                    raw = json.loads(_CACHE_FILE.read_text()) if _CACHE_FILE.exists() else {}
+                except Exception:
+                    raw = {}
+                raw[cache_key] = {
+                    "value":     headlines,
+                    "cached_at": (datetime.now(tz=timezone.utc) - timedelta(hours=_CACHE_TTL_HRS - 1)).isoformat(),
+                }
+                _CACHE_FILE.write_text(json.dumps(raw, indent=2))
+                return headlines
+        except Exception:
+            pass  # fall through to static fallback
+
+    return _FALLBACK_STOCK_HEADLINES.get(ticker.upper(), [])
+
+
+# Fallback headlines for Signal A — used when Alpha Vantage NEWS_SENTIMENT is unavailable.
+_FALLBACK_SECTOR_HEADLINES: dict[str, list[dict]] = {
     "technology": [
         {"text": "NVIDIA reports record quarterly revenue driven by surging AI chip demand", "timestamp": _ts(2)},
         {"text": "Microsoft Azure cloud growth accelerates as enterprise AI adoption rises", "timestamp": _ts(5)},
@@ -231,9 +331,8 @@ _SECTOR_HEADLINES: dict[str, list[dict]] = {
     ],
 }
 
-# Stub headlines fed to FinBERT for Signal E (stock-level sentiment).
-# Replace with live NewsAPI queries filtered by company name or ticker.
-_STOCK_HEADLINES: dict[str, list[str]] = {
+# Fallback headlines for Signal E — used when Alpha Vantage NEWS_SENTIMENT is unavailable.
+_FALLBACK_STOCK_HEADLINES: dict[str, list[str]] = {
     "NVDA": [
         "NVIDIA dominates AI chip market with Blackwell GPU demand exceeding supply",
         "NVIDIA data center revenue hits record high as hyperscalers expand AI infrastructure",
@@ -363,22 +462,24 @@ def get_sentiment_signal(sectors: list[str]) -> dict:
         Dict mapping sector to sentiment score (-1.0 to 1.0) and label.
         Score > 0.2 = positive, < -0.2 = negative, else neutral.
     """
-    # Gather headlines for the requested sectors (keyed by FinBERT sector name)
-    headlines = []
+    # Fetch live headlines from Alpha Vantage NEWS_SENTIMENT, fall back to static if needed
+    fetched: dict[str, list[dict]] = {}
+    headlines_flat: list[dict] = []
     for sector in sectors:
-        fb_sector = "technology" if sector == "tech" else sector
-        headlines.extend(_SECTOR_HEADLINES.get(fb_sector, []))
+        sector_headlines = _fetch_sector_headlines(sector)
+        fetched[sector]  = sector_headlines
+        headlines_flat.extend(sector_headlines)
 
-    scores = get_sector_sentiments(sectors, headlines)
+    scores = get_sector_sentiments(sectors, headlines_flat)
 
     results = {}
     for sector in sectors:
         score = scores[sector]
         results[sector] = {
             "sentiment_score": score,
-            "label": "positive" if score > 0.2 else "negative" if score < -0.2 else "neutral",
-            "headline_count": len(_SECTOR_HEADLINES.get("technology" if sector == "tech" else sector, [])),
-            "source": "finbert_finetuned",
+            "label":           "positive" if score > 0.2 else "negative" if score < -0.2 else "neutral",
+            "headline_count":  len(fetched[sector]),
+            "source":          "Alpha Vantage NEWS_SENTIMENT → FinBERT",
         }
     return results
 
@@ -495,17 +596,19 @@ def get_stock_sentiment_signal(tickers: list[str]) -> dict:
     Returns:
         Dict mapping ticker to sentiment score and label.
     """
-    ticker_headlines = {t.upper(): _STOCK_HEADLINES.get(t.upper(), []) for t in tickers}
-    scores = get_stock_sentiments(ticker_headlines)
+    # Fetch live headlines per ticker from Alpha Vantage NEWS_SENTIMENT
+    ticker_headlines = {t.upper(): _fetch_stock_headlines(t.upper()) for t in tickers}
+    scores           = get_stock_sentiments(ticker_headlines)
 
     results = {}
     for ticker in tickers:
-        score = scores[ticker.upper()]
+        t     = ticker.upper()
+        score = scores[t]
         results[ticker] = {
             "sentiment_score": score,
-            "label": "positive" if score > 0.2 else "negative" if score < -0.2 else "neutral",
-            "headline_count": len(_STOCK_HEADLINES.get(ticker.upper(), [])),
-            "source": "finbert_finetuned",
+            "label":           "positive" if score > 0.2 else "negative" if score < -0.2 else "neutral",
+            "headline_count":  len(ticker_headlines[t]),
+            "source":          "Alpha Vantage NEWS_SENTIMENT → FinBERT",
         }
     return results
 
