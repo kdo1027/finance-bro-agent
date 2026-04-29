@@ -49,7 +49,7 @@ def get_llm(temperature: float = 0.3):
     """
     Initialize the LLM
     """
-    return ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=temperature)
+    return ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=temperature)
 
 
 def _text(response) -> str:
