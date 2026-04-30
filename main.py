@@ -189,12 +189,11 @@ def _prompt_number(prompt: str, max_val: int) -> int | None:
         print(f"  {Colors.YELLOW}Please enter a number between 1 and {max_val}.{Colors.RESET}")
 
 
-def show_menu(phase: str) -> str | None:
+def show_menu(phase: str) -> dict | None:
     """Display numbered menus for a structured phase.
 
-    Returns a clearly formatted answer string the extraction LLM can parse
-    reliably, or None if the user interrupted.
-    For 'specific_industry_interest' it asks a follow-up free-text question.
+    Returns a dict mapping profile field names to selected enum values,
+    or None if the user interrupted.
     """
     menus = PHASE_MENUS.get(phase)
     if not menus:
@@ -238,14 +237,7 @@ def show_menu(phase: str) -> str | None:
         except (EOFError, KeyboardInterrupt):
             return None
 
-    # Build a clear, unambiguous string for the extraction LLM
-    parts = []
-    for key, val in answers.items():
-        if isinstance(val, list):
-            parts.append(f"{key}: {', '.join(val)}")
-        else:
-            parts.append(f"{key}: {val}")
-    return ". ".join(parts)
+    return answers
 
 
 # ── Phase routing ──────────────────────────────────────────────────────────────
@@ -309,11 +301,18 @@ def main():
 
         # ── Get user input ────────────────────────────────────────────────────
         if current_phase in PHASE_MENUS:
-            # Structured question — show numbered menu
-            user_input = show_menu(current_phase)
-            if user_input is None:
+            answers = show_menu(current_phase)
+            if answers is None:
                 print("\n\nGoodbye!")
                 break
+            # Populate profile directly — no LLM extraction needed
+            profile = UserProfile(**state["profile"])
+            for key, val in answers.items():
+                setattr(profile, key, val)
+            state["profile"] = profile.model_dump()
+            # Build a readable string for the message history
+            parts = [f"{k}: {', '.join(v) if isinstance(v, list) else v}" for k, v in answers.items()]
+            user_input = ". ".join(parts)
         else:
             # Free text — motivation (Q10) and confirm
             try:

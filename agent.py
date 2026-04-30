@@ -22,8 +22,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 
-from schema import (ExtractedConstraints, ExtractedExperience, ExtractedGoals,
-                    ExtractedMotivation, ExtractedRisk, UserProfile)
+from schema import ExtractedMotivation, UserProfile
 from tools import SECTOR_TOOLS, STOCK_TOOLS, SECTOR_STOCKS
 
 # Agent State
@@ -88,268 +87,72 @@ Your rules:
 
 def greet_node(state: AgentState) -> dict:
     """Opening message — introduce the agent and kick off the intake."""
-    llm = get_llm()
-
-    response = llm.invoke([
-        SystemMessage(content=SYSTEM_PROMPT),
-        HumanMessage(content=(
-            "Generate a brief, friendly greeting for a new user. "
-            "Introduce yourself as a retail investment advisor. "
-            "Then ask the first question: how they'd rate their investing experience "
-            "on a scale of 1-5 (1 = 'what's an ETF?', 5 = 'I've run my own options strategies'), "
-            "and which asset classes they've invested in before "
-            "(stocks, ETFs/mutual funds, bonds, crypto, options/futures, or none yet). "
-            "Keep it to 3-4 sentences total."
-        )),
-    ])
-
     return {
-        "messages": [AIMessage(content=_text(response))],
+        "messages": [AIMessage(content=(
+            "Hey! I'm Finance Bro — I'll help you figure out which investments make the most sense for you.\n"
+            "I'll ask a few quick questions about your experience, risk tolerance, and goals, "
+            "then analyze the market and give you a personalized recommendation.\n"
+            "Let's start!"
+        ))],
         "current_phase": "experience",
     }
 
 
 def experience_node(state: AgentState) -> dict:
-    """Extract experience level and prior investments from user response, then ask about risk."""
-    llm = get_llm()
-
-    # Extract structured data from the user's last message
-    extraction_llm = llm.with_structured_output(ExtractedExperience)
-    user_msg = state["messages"][-1].content
-
-    extracted = extraction_llm.invoke([
-        SystemMessage(content=(
-            "Extract the user's investing experience level and prior investment types "
-            "from their message. Map their self-rating: 1-2 = beginner, 3 = intermediate, "
-            "4-5 = advanced. If they mention asset classes, map them to the enum values. "
-            "If information is missing, leave the field as null."
-        )),
-        HumanMessage(content=user_msg),
-    ])
-
-    # Update profile
-    profile = UserProfile(**state["profile"])
-    if extracted.experience_level:
-        profile.experience_level = extracted.experience_level
-    if extracted.prior_investments:
-        profile.prior_investments = extracted.prior_investments
-
-    if not _has_data(extracted):
-        response = llm.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT)]
-            + state["messages"]
-            + [HumanMessage(content=(
-                "The user didn't answer the question. Politely let them know you need "
-                "their experience rating (1-5) and which asset classes they've tried. Ask again."
-            ))]
-        )
-        return {
-            "messages": [AIMessage(content=_text(response))],
-            "profile": profile.model_dump(),
-            "current_phase": "experience",
-        }
-
-    # Generate the next question (risk tolerance)
-    response = llm.invoke(
-        [SystemMessage(content=SYSTEM_PROMPT)]
-        + state["messages"]
-        + [HumanMessage(content=(
-            "The user just told you about their experience. Briefly acknowledge what they said, "
-            "then ask TWO questions about risk tolerance:\n"
-            "1) If their portfolio dropped 25% in a month, what would they do? "
-            "(buy more / hold / sell some / sell everything)\n"
-            "2) Which statement fits them best?\n"
-            "  - I want to preserve what I have, even if returns are modest\n"
-            "  - I want steady growth with limited downside\n"
-            "  - I'm comfortable with swings for better long-term returns\n"
-            "  - Maximum growth — I can stomach big drawdowns\n"
-            "Keep it conversational and concise."
-        ))]
-    )
-
+    """Profile already populated by main.py — advance to risk with a hardcoded acknowledgment."""
     return {
-        "messages": [AIMessage(content=_text(response))],
-        "profile": profile.model_dump(),
+        "messages": [AIMessage(content="Got it! Now let's see how you handle risk.")],
+        "profile": state["profile"],
         "current_phase": "risk",
     }
 
 
 def risk_node(state: AgentState) -> dict:
-    """Extract risk tolerance, then ask about goals and horizon."""
-    llm = get_llm()
-
-    extraction_llm = llm.with_structured_output(ExtractedRisk)
-    user_msg = state["messages"][-1].content
-
-    extracted = extraction_llm.invoke([
-        SystemMessage(content=(
-            "Extract the user's drawdown response and risk statement from their message. "
-            "Map to the closest enum value. If information is missing, leave as null."
-        )),
-        HumanMessage(content=user_msg),
-    ])
-
-    profile = UserProfile(**state["profile"])
-    if extracted.drawdown_response:
-        profile.drawdown_response = extracted.drawdown_response
-    if extracted.risk_statement:
-        profile.risk_statement = extracted.risk_statement
-
-    if not _has_data(extracted):
-        response = llm.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT)]
-            + state["messages"]
-            + [HumanMessage(content=(
-                "The user didn't answer the risk questions. Politely ask again: "
-                "what would they do if their portfolio dropped 25% (buy more / hold / sell some / sell everything), "
-                "and which risk statement best fits them."
-            ))]
-        )
-        return {
-            "messages": [AIMessage(content=_text(response))],
-            "profile": profile.model_dump(),
-            "current_phase": "risk",
-        }
-
-    response = llm.invoke(
-        [SystemMessage(content=SYSTEM_PROMPT)]
-        + state["messages"]
-        + [HumanMessage(content=(
-            "The user just shared their risk tolerance. Briefly acknowledge, then ask about goals:\n"
-            "1) What's their primary investing goal? "
-            "(retirement / house down payment / general wealth building / short-term income / other)\n"
-            "2) When do they expect to need this money? "
-            "(less than 1 year / 1-3 years / 3-10 years / 10+ years)\n"
-            "3) What's their target annualized return? "
-            "(under 5% / 5-10% / 10-15% / 15%+)\n"
-            "Keep it concise."
-        ))]
-    )
-
+    """Profile already populated by main.py — advance to goals with a hardcoded acknowledgment."""
     return {
-        "messages": [AIMessage(content=_text(response))],
-        "profile": profile.model_dump(),
+        "messages": [AIMessage(content="Perfect. Next up — your goals and time horizon.")],
+        "profile": state["profile"],
         "current_phase": "goals",
     }
 
 
 def goals_node(state: AgentState) -> dict:
-    """Extract goals/horizon/return target, then ask about constraints."""
-    llm = get_llm()
-
-    extraction_llm = llm.with_structured_output(ExtractedGoals)
-    user_msg = state["messages"][-1].content
-
-    extracted = extraction_llm.invoke([
-        SystemMessage(content=(
-            "Extract the user's investing goal, time horizon, and target return "
-            "from their message. Map to the closest enum values."
-        )),
-        HumanMessage(content=user_msg),
-    ])
-
-    profile = UserProfile(**state["profile"])
-    if extracted.investing_goal:
-        profile.investing_goal = extracted.investing_goal
-    if extracted.time_horizon:
-        profile.time_horizon = extracted.time_horizon
-    if extracted.target_return:
-        profile.target_return = extracted.target_return
-
-    if not _has_data(extracted):
-        response = llm.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT)]
-            + state["messages"]
-            + [HumanMessage(content=(
-                "The user didn't answer the goals questions. Politely ask again: "
-                "their primary investing goal, when they expect to need the money, "
-                "and their target annualized return."
-            ))]
-        )
-        return {
-            "messages": [AIMessage(content=_text(response))],
-            "profile": profile.model_dump(),
-            "current_phase": "goals",
-        }
-
-    response = llm.invoke(
-        [SystemMessage(content=SYSTEM_PROMPT)]
-        + state["messages"]
-        + [HumanMessage(content=(
-            "The user shared their goals. Briefly acknowledge, then ask:\n"
-            "1) Any sectors they want to avoid or prioritize? "
-            "(ESG/sustainability focus, exclude tobacco/defense, specific industry interest, no preference)\n"
-            "2) How much of their total savings does this investment represent? "
-            "(under 10% / 10-25% / 25-50% / 50%+)\n"
-            "Keep it concise."
-        ))]
-    )
-
+    """Profile already populated by main.py — advance to constraints with a hardcoded acknowledgment."""
     return {
-        "messages": [AIMessage(content=_text(response))],
-        "profile": profile.model_dump(),
+        "messages": [AIMessage(content="Nice. Two more quick ones about your preferences.")],
+        "profile": state["profile"],
         "current_phase": "constraints",
     }
 
 
 def constraints_node(state: AgentState) -> dict:
-    """Extract constraints, then ask the motivation question."""
-    llm = get_llm()
-
-    extraction_llm = llm.with_structured_output(ExtractedConstraints)
-    user_msg = state["messages"][-1].content
-
-    extracted = extraction_llm.invoke([
-        SystemMessage(content=(
-            "Extract sector preferences and portfolio percentage from the user's message. "
-            "If they mention a specific industry, capture it in sector_detail."
-        )),
-        HumanMessage(content=user_msg),
-    ])
-
-    profile = UserProfile(**state["profile"])
-    if extracted.sector_preference:
-        profile.sector_preference = extracted.sector_preference
-    if extracted.sector_detail:
-        profile.sector_detail = extracted.sector_detail
-    if extracted.portfolio_percent:
-        profile.portfolio_percent = extracted.portfolio_percent
-
-    if not _has_data(extracted):
-        response = llm.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT)]
-            + state["messages"]
-            + [HumanMessage(content=(
-                "The user didn't answer the constraint questions. Politely ask again: "
-                "any sector preferences or exclusions, and what percentage of their "
-                "total savings this investment represents."
-            ))]
-        )
-        return {
-            "messages": [AIMessage(content=_text(response))],
-            "profile": profile.model_dump(),
-            "current_phase": "constraints",
-        }
-
-    response = llm.invoke(
-        [SystemMessage(content=SYSTEM_PROMPT)]
-        + state["messages"]
-        + [HumanMessage(content=(
-            "Almost done! Ask the user one final question: "
-            "In one sentence, why are they investing right now? "
-            "This helps you personalize the recommendation. Keep it brief and warm."
-        ))]
-    )
-
+    """Profile already populated by main.py — advance to motivation with a hardcoded prompt."""
     return {
-        "messages": [AIMessage(content=_text(response))],
-        "profile": profile.model_dump(),
+        "messages": [AIMessage(content="Almost there! Last one: in a sentence, why are you investing right now?")],
+        "profile": state["profile"],
         "current_phase": "motivation",
     }
 
 
+def _format_profile_summary(profile: UserProfile) -> str:
+    """Build a readable profile summary without an LLM call."""
+    def _display(val) -> str:
+        if isinstance(val, list):
+            return ", ".join(_display(v) for v in val)
+        raw = val.value if hasattr(val, "value") else str(val)
+        return raw.replace("_", " ").title()
+
+    status = profile.completion_status()
+    lines = ["Here's what I have for you:\n"]
+    for field_name, value in status["filled"].items():
+        label = field_name.replace("_", " ").title()
+        lines.append(f"  {label}: {_display(value)}")
+    lines.append("\nDoes everything look right? Type 'yes' to run the analysis, or let me know what to change.")
+    return "\n".join(lines)
+
+
 def motivation_node(state: AgentState) -> dict:
-    """Extract motivation, then show the profile for confirmation."""
+    """Extract free-text motivation (Q10), then show profile summary for confirmation."""
     llm = get_llm()
 
     extraction_llm = llm.with_structured_output(ExtractedMotivation)
@@ -365,90 +168,35 @@ def motivation_node(state: AgentState) -> dict:
         profile.investing_motivation = extracted.investing_motivation
 
     if not _has_data(extracted):
-        response = llm.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT)]
-            + state["messages"]
-            + [HumanMessage(content=(
-                "The user didn't answer. Politely ask again: in one sentence, "
-                "why are they investing right now?"
-            ))]
-        )
         return {
-            "messages": [AIMessage(content=_text(response))],
+            "messages": [AIMessage(content="I didn't quite catch that. In a sentence or two, why are you investing right now?")],
             "profile": profile.model_dump(),
             "current_phase": "motivation",
         }
 
-    # Build a readable summary of the profile
-    status = profile.completion_status()
-    summary_lines = []
-    for field_name, value in status["filled"].items():
-        display_name = field_name.replace("_", " ").title()
-        if isinstance(value, list):
-            display_value = ", ".join(str(v.value) if hasattr(v, "value") else str(v) for v in value)
-        elif hasattr(value, "value"):
-            display_value = value.value
-        else:
-            display_value = str(value)
-        summary_lines.append(f"  - {display_name}: {display_value}")
-
-    profile_summary = "\n".join(summary_lines)
-
-    response = llm.invoke(
-        [SystemMessage(content=SYSTEM_PROMPT)]
-        + state["messages"]
-        + [HumanMessage(content=(
-            f"Great, you've collected the user's full profile. Here's what you have:\n\n"
-            f"{profile_summary}\n\n"
-            "Present this back to the user in a friendly, readable way. "
-            "Ask them to confirm if everything looks right, or if they'd like to change anything. "
-            "Tell them that once confirmed, you'll analyze the market and generate a recommendation."
-        ))]
-    )
-
     return {
-        "messages": [AIMessage(content=_text(response))],
+        "messages": [AIMessage(content=_format_profile_summary(profile))],
         "profile": profile.model_dump(),
         "current_phase": "confirm",
     }
 
 
 def confirm_node(state: AgentState) -> dict:
-    """Check if user confirmed. If yes, move to analysis. If not, handle corrections."""
-    llm = get_llm()
+    """Check if user confirmed. If yes, move to analysis. If not, explain how to correct."""
     user_msg = state["messages"][-1].content.lower()
 
-    # Simple confirmation detection
     confirms = ["yes", "yeah", "yep", "looks good", "correct", "confirm", "let's go", "go ahead", "sure", "that's right"]
     is_confirmed = any(c in user_msg for c in confirms)
 
     if is_confirmed:
-        response = llm.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT)]
-            + state["messages"]
-            + [HumanMessage(content=(
-                "The user confirmed their profile. Tell them you're now analyzing the market "
-                "using four independent signals: sentiment analysis, fundamental data, "
-                "macro environment, and momentum indicators. Keep it to 1-2 sentences. "
-                "Sound confident but not over-promising."
-            ))]
-        )
         return {
-            "messages": [AIMessage(content=_text(response))],
+            "messages": [AIMessage(content="On it! Running market analysis across sentiment, fundamentals, macro, and momentum — this takes a moment.")],
             "current_phase": "analyze",
         }
     else:
-        response = llm.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT)]
-            + state["messages"]
-            + [HumanMessage(content=(
-                "The user wants to change something in their profile. "
-                "Ask them what they'd like to update. Be helpful and concise."
-            ))]
-        )
         return {
-            "messages": [AIMessage(content=_text(response))],
-            "current_phase": "confirm",  # stay in confirm loop
+            "messages": [AIMessage(content="To update an answer, type 'quit' and run me again — the menus will let you pick fresh. Or type 'yes' to proceed with your current answers.")],
+            "current_phase": "confirm",
         }
 
 
