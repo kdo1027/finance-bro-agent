@@ -149,7 +149,7 @@
       "beta": 1.0,
       "source": "Alpha Vantage OVERVIEW"
     },
-    "cached_at": "2026-04-30T20:40:12.145592"
+    "cached_at": "2026-05-02T12:20:27.902555"
   },
   "fundamentals_stock_JNJ": {
     "value": {
@@ -162,7 +162,7 @@
       "beta": 1.0,
       "source": "Alpha Vantage OVERVIEW"
     },
-    "cached_at": "2026-04-30T20:40:24.273573"
+    "cached_at": "2026-05-02T12:20:40.051889"
   },
   "fundamentals_stock_LLY": {
     "value": {
@@ -175,7 +175,7 @@
       "beta": 1.0,
       "source": "Alpha Vantage OVERVIEW"
     },
-    "cached_at": "2026-04-30T20:40:36.386320"
+    "cached_at": "2026-05-02T12:20:52.193915"
   },
   "fundamentals_stock_JPM": {
     "value": {
@@ -258,7 +258,7 @@
       "trend": "flat",
       "source": "Alpha Vantage (no data)"
     },
-    "cached_at": "2026-04-30T20:42:01.129150"
+    "cached_at": "2026-05-02T12:21:04.304600"
   },
   "momentum_stock_JNJ": {
     "value": {
@@ -269,7 +269,7 @@
       "trend": "flat",
       "source": "Alpha Vantage (no data)"
     },
-    "cached_at": "2026-04-30T20:42:13.238006"
+    "cached_at": "2026-05-02T12:21:16.429705"
   },
   "momentum_stock_LLY": {
     "value": {
@@ -280,7 +280,7 @@
       "trend": "flat",
       "source": "Alpha Vantage (no data)"
     },
-    "cached_at": "2026-04-30T20:42:25.354253"
+    "cached_at": "2026-05-02T12:21:28.552807"
   },
   "momentum_stock_JPM": {
     "value": {
