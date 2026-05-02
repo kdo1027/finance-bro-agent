@@ -1,0 +1,1716 @@
+{
+  "fundamentals_sector_XLK": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:39:42.530279"
+  },
+  "fundamentals_sector_XLV": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:39:54.671276"
+  },
+  "fundamentals_sector_XLE": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:40:06.851972"
+  },
+  "fundamentals_sector_XLF": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:40:19.010218"
+  },
+  "momentum_sector_XLK": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)",
+      "etf": "XLK"
+    },
+    "cached_at": "2026-05-02T11:40:31.164649"
+  },
+  "momentum_sector_XLV": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)",
+      "etf": "XLV"
+    },
+    "cached_at": "2026-05-02T11:40:43.312253"
+  },
+  "momentum_sector_XLE": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)",
+      "etf": "XLE"
+    },
+    "cached_at": "2026-05-02T11:40:55.463868"
+  },
+  "momentum_sector_XLF": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)",
+      "etf": "XLF"
+    },
+    "cached_at": "2026-05-02T11:41:07.609251"
+  },
+  "fundamentals_stock_NVDA": {
+    "value": {
+      "pe_ratio": 40.5,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 73.2,
+      "health_score": 0.8,
+      "health_label": "healthy",
+      "volatility": "high",
+      "beta": 2.33,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:44:22.769708"
+  },
+  "fundamentals_stock_MSFT": {
+    "value": {
+      "pe_ratio": 24.7,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 18.3,
+      "health_score": 1.0,
+      "health_label": "healthy",
+      "volatility": "medium",
+      "beta": 1.11,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:44:34.945415"
+  },
+  "fundamentals_stock_AAPL": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:44:47.159048"
+  },
+  "fundamentals_stock_UNH": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-04-30T20:40:12.145592"
+  },
+  "fundamentals_stock_JNJ": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-04-30T20:40:24.273573"
+  },
+  "fundamentals_stock_LLY": {
+    "value": {
+      "pe_ratio": 0.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 0.0,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "medium",
+      "beta": 1.0,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-04-30T20:40:36.386320"
+  },
+  "fundamentals_stock_JPM": {
+    "value": {
+      "pe_ratio": 15.0,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 12.7,
+      "health_score": 1.0,
+      "health_label": "healthy",
+      "volatility": "medium",
+      "beta": 1.04,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:43:09.703427"
+  },
+  "fundamentals_stock_BAC": {
+    "value": {
+      "pe_ratio": 13.2,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 11.8,
+      "health_score": 1.0,
+      "health_label": "healthy",
+      "volatility": "medium",
+      "beta": 1.24,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:43:21.880050"
+  },
+  "fundamentals_stock_GS": {
+    "value": {
+      "pe_ratio": 16.9,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": 14.5,
+      "health_score": 1.0,
+      "health_label": "healthy",
+      "volatility": "high",
+      "beta": 1.31,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:43:34.056649"
+  },
+  "momentum_stock_NVDA": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:46:12.398076"
+  },
+  "momentum_stock_MSFT": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:46:24.553873"
+  },
+  "momentum_stock_AAPL": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:46:36.708116"
+  },
+  "momentum_stock_UNH": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-04-30T20:42:01.129150"
+  },
+  "momentum_stock_JNJ": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-04-30T20:42:13.238006"
+  },
+  "momentum_stock_LLY": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-04-30T20:42:25.354253"
+  },
+  "momentum_stock_JPM": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:44:59.319094"
+  },
+  "momentum_stock_BAC": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:45:11.577989"
+  },
+  "momentum_stock_GS": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:45:23.737367"
+  },
+  "news_sector_tech": {
+    "value": [
+      {
+        "text": "Amazon.com, Inc. (AMZN): Billionaire Tom Steyer Is Bullish on This Stock",
+        "timestamp": "2026-05-02T14:55:03Z"
+      },
+      {
+        "text": "Stocks to Watch: EBay, GameStop, Origin Materials",
+        "timestamp": "2026-05-02T14:38:58Z"
+      },
+      {
+        "text": "Texas Instruments Independent Director Mark Blinn Sells 100% Of Holding",
+        "timestamp": "2026-05-02T14:31:26Z"
+      },
+      {
+        "text": "Verizon Stock Is Up 19% Over the Past Year. Here\u2019s What a Q1 Beat Raise Signal for Investors",
+        "timestamp": "2026-05-02T14:13:33Z"
+      },
+      {
+        "text": "Arista Networks Stock Is Up 90% in the Past Year. Here\u2019s What Analysts Expect From Q1 Earnings",
+        "timestamp": "2026-05-02T13:45:04Z"
+      },
+      {
+        "text": "US Bancorp DE Sells 27,656 Shares of SAP SE $SAP",
+        "timestamp": "2026-05-02T13:32:23Z"
+      },
+      {
+        "text": "Microchip Technology Incorporated $MCHP Stock Holdings Cut by US Bancorp DE",
+        "timestamp": "2026-05-02T13:24:52Z"
+      },
+      {
+        "text": "US Bancorp DE Lowers Stock Holdings in Electronic Arts Inc. $EA",
+        "timestamp": "2026-05-02T13:21:25Z"
+      },
+      {
+        "text": "US Bancorp DE Sells 11,647 Shares of Digital Realty Trust, Inc. $DLR",
+        "timestamp": "2026-05-02T13:21:21Z"
+      },
+      {
+        "text": "Analysts Conflicted on These Technology Names: Zeta Global Holdings Corp (ZETA), CCC Intelligent Solutions Holdings (CCC) and Apple (AAPL)",
+        "timestamp": "2026-05-02T13:09:18Z"
+      },
+      {
+        "text": "Strs Ohio Sells 38,544 Shares of Verizon Communications Inc. $VZ",
+        "timestamp": "2026-05-02T13:05:24Z"
+      },
+      {
+        "text": "Benzinga Bulls And Bears: Apple, Intel, Tesla \u2014 And Markets Extend April Rally",
+        "timestamp": "2026-05-02T13:02:57Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Reduces Holdings in MKS Inc. $MKSI",
+        "timestamp": "2026-05-02T13:01:07Z"
+      },
+      {
+        "text": "UBS Group AG Lowers Position in NetApp, Inc. $NTAP",
+        "timestamp": "2026-05-02T13:01:03Z"
+      },
+      {
+        "text": "Strs Ohio Sells 4,527 Shares of Analog Devices, Inc. $ADI",
+        "timestamp": "2026-05-02T13:00:58Z"
+      },
+      {
+        "text": "Lam Research Corporation $LRCX Shares Sold by Strs Ohio",
+        "timestamp": "2026-05-02T13:00:49Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Buys 136,708 Shares of Manhattan Associates, Inc. $MANH",
+        "timestamp": "2026-05-02T13:00:44Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Has $1.24 Billion Position in MACOM Technology Solutions Holdings, Inc. $MTSI",
+        "timestamp": "2026-05-02T13:00:34Z"
+      },
+      {
+        "text": "Strs Ohio Purchases 104,986 Shares of Arista Networks, Inc. $ANET",
+        "timestamp": "2026-05-02T12:54:06Z"
+      },
+      {
+        "text": "Strs Ohio Has $103.26 Million Position in Cisco Systems, Inc. $CSCO",
+        "timestamp": "2026-05-02T12:52:19Z"
+      },
+      {
+        "text": "Universal Beteiligungs und Servicegesellschaft mbH Sells 1,508,363 Shares of Magnite, Inc. $MGNI",
+        "timestamp": "2026-05-02T12:50:43Z"
+      },
+      {
+        "text": "Strs Ohio Cuts Stock Holdings in AT&T Inc. $T",
+        "timestamp": "2026-05-02T12:41:17Z"
+      },
+      {
+        "text": "Universal Display Corporation (NASDAQ:OLED) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:38:49Z"
+      },
+      {
+        "text": "Strs Ohio Purchases 80,141 Shares of Qualcomm Incorporated $QCOM",
+        "timestamp": "2026-05-02T12:38:14Z"
+      },
+      {
+        "text": "Analysts Offer Insights on Technology Companies: Advanced Micro Devices (AMD), Broadridge Financial Solutions (BR) and Asure (ASUR)",
+        "timestamp": "2026-05-02T12:33:07Z"
+      },
+      {
+        "text": "nVent Electric plc (NYSE:NVT) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:09:44Z"
+      },
+      {
+        "text": "Proto Labs, Inc. (NYSE:PRLB) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:09:33Z"
+      },
+      {
+        "text": "Analysts Offer Insights on Technology Companies: Zeta Global Holdings Corp (ZETA), Plexus (PLXS) and Monolithic Power (MPWR)",
+        "timestamp": "2026-05-02T12:08:42Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Buys New Shares in Verizon Communications Inc. $VZ",
+        "timestamp": "2026-05-02T12:08:30Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Makes New $84.20 Million Investment in Texas Instruments Incorporated $TXN",
+        "timestamp": "2026-05-02T12:08:22Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Takes $220.28 Million Position in Cisco Systems, Inc. $CSCO",
+        "timestamp": "2026-05-02T12:07:19Z"
+      },
+      {
+        "text": "Analysts Offer Insights on Technology Companies: Advanced Micro Devices (AMD), Broadridge Financial Solutions (BR) and Asure (ASUR)",
+        "timestamp": "2026-05-02T12:07:10Z"
+      },
+      {
+        "text": "Horizon Investments LLC Grows Stock Position in Analog Devices, Inc. $ADI",
+        "timestamp": "2026-05-02T12:01:01Z"
+      },
+      {
+        "text": "156,731 Shares in Intuit Inc. $INTU Purchased by PFA Pension Forsikringsaktieselskab",
+        "timestamp": "2026-05-02T12:00:48Z"
+      },
+      {
+        "text": "April Review: Markets Advance Through Global Volatility - Raymond James - Commentaries",
+        "timestamp": "2026-05-02T12:00:19Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Buys New Holdings in International Business Machines Corporation $IBM",
+        "timestamp": "2026-05-02T11:59:38Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Invests $96.36 Million in Uber Technologies, Inc. $UBER",
+        "timestamp": "2026-05-02T11:59:23Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Purchases New Position in Analog Devices, Inc. $ADI",
+        "timestamp": "2026-05-02T11:57:01Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Buys Shares of 193,596 Intuitive Surgical, Inc. $ISRG",
+        "timestamp": "2026-05-02T11:54:52Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Takes Position in AT&T Inc. $T",
+        "timestamp": "2026-05-02T11:54:25Z"
+      },
+      {
+        "text": "Irhythm Technologies (IRTC) Receives a Buy from Wells Fargo",
+        "timestamp": "2026-05-02T11:53:59Z"
+      },
+      {
+        "text": "Horizon Investments LLC Sells 31,525 Shares of Cisco Systems, Inc. $CSCO",
+        "timestamp": "2026-05-02T11:52:17Z"
+      },
+      {
+        "text": "Does CoStar\u2019s Strong Q1 and Homes.com Profit Momentum Reshape The Bull Case For CoStar Group (CSGP)?",
+        "timestamp": "2026-05-02T11:44:23Z"
+      },
+      {
+        "text": "Horizon Investments LLC Has $20.52 Million Stake in Lam Research Corporation $LRCX",
+        "timestamp": "2026-05-02T11:41:02Z"
+      },
+      {
+        "text": "Benchmark Co. Remains a Buy on OBOOK Holdings, Inc. Class A (OWLS)",
+        "timestamp": "2026-05-02T11:39:01Z"
+      },
+      {
+        "text": "Horizon Investments LLC Reduces Stock Position in Qualcomm Incorporated $QCOM",
+        "timestamp": "2026-05-02T11:38:10Z"
+      },
+      {
+        "text": "Syntax Research Inc. Acquires 3,812 Shares of Oracle Corporation $ORCL",
+        "timestamp": "2026-05-02T11:38:04Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Makes New $172.73 Million Investment in Lam Research Corporation $LRCX",
+        "timestamp": "2026-05-02T11:37:54Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Takes Position in Arista Networks, Inc. $ANET",
+        "timestamp": "2026-05-02T11:37:02Z"
+      },
+      {
+        "text": "Air Products Deepens Samsung Ties With Pyeongtaek Semiconductor Gas Megaproject",
+        "timestamp": "2026-05-02T11:21:08Z"
+      }
+    ],
+    "cached_at": "2026-05-02T12:38:52.014801+00:00"
+  },
+  "news_sector_healthcare": {
+    "value": [
+      {
+        "text": "Eli Lilly and Company (NYSE:LLY) Given New $1,133.00 Price Target at Bank of America",
+        "timestamp": "2026-05-02T14:37:55Z"
+      },
+      {
+        "text": "Eli Lilly & Co Soars on Obesity-Drug Power Play",
+        "timestamp": "2026-05-02T14:10:55Z"
+      },
+      {
+        "text": "US Bancorp DE Has $30.98 Million Position in Edwards Lifesciences Corporation $EW",
+        "timestamp": "2026-05-02T13:37:31Z"
+      },
+      {
+        "text": "Baxter International (NYSE:BAX) Stock Price Expected to Rise, Barclays Analyst Says",
+        "timestamp": "2026-05-02T13:31:07Z"
+      },
+      {
+        "text": "Baxter International (NYSE:BAX) Given New $19.00 Price Target at Stifel Nicolaus",
+        "timestamp": "2026-05-02T13:31:07Z"
+      },
+      {
+        "text": "US Bancorp DE Cuts Holdings in Elevance Health, Inc. $ELV",
+        "timestamp": "2026-05-02T13:21:24Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Cuts Stock Position in Penumbra, Inc. $PEN",
+        "timestamp": "2026-05-02T13:08:52Z"
+      },
+      {
+        "text": "US Bancorp DE Has $35.23 Million Holdings in Solventum Corporation $SOLV",
+        "timestamp": "2026-05-02T13:08:19Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Sells 353,209 Shares of Molina Healthcare, Inc $MOH",
+        "timestamp": "2026-05-02T13:08:00Z"
+      },
+      {
+        "text": "Strs Ohio Sells 17,995 Shares of Merck & Co., Inc. $MRK",
+        "timestamp": "2026-05-02T13:07:59Z"
+      },
+      {
+        "text": "Wealthstar Advisors LLC Buys Shares of 1,169 Eli Lilly and Company $LLY",
+        "timestamp": "2026-05-02T13:07:49Z"
+      },
+      {
+        "text": "Strs Ohio Has $70.46 Million Stake in CVS Health Corporation $CVS",
+        "timestamp": "2026-05-02T13:05:21Z"
+      },
+      {
+        "text": "Strs Ohio Decreases Stake in Abbott Laboratories $ABT",
+        "timestamp": "2026-05-02T13:00:59Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Purchases 399,487 Shares of Moderna, Inc. $MRNA",
+        "timestamp": "2026-05-02T13:00:56Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Purchases 47,432 Shares of Charles River Laboratories International, Inc. $CRL",
+        "timestamp": "2026-05-02T13:00:18Z"
+      },
+      {
+        "text": "UBS Group AG Acquires 125,521 Shares of STERIS plc $STE",
+        "timestamp": "2026-05-02T13:00:17Z"
+      },
+      {
+        "text": "Strs Ohio Has $85.26 Million Stock Position in McKesson Corporation $MCK",
+        "timestamp": "2026-05-02T12:59:52Z"
+      },
+      {
+        "text": "UBS Group AG Buys 590,997 Shares of International Flavors & Fragrances Inc. $IFF",
+        "timestamp": "2026-05-02T12:59:42Z"
+      },
+      {
+        "text": "Strs Ohio Has $181.81 Million Position in AbbVie Inc. $ABBV",
+        "timestamp": "2026-05-02T12:53:56Z"
+      },
+      {
+        "text": "Intuitive Surgical, Inc. $ISRG Shares Sold by Strs Ohio",
+        "timestamp": "2026-05-02T12:53:44Z"
+      },
+      {
+        "text": "Strs Ohio Reduces Stock Holdings in Gilead Sciences, Inc. $GILD",
+        "timestamp": "2026-05-02T12:53:36Z"
+      },
+      {
+        "text": "Universal Beteiligungs und Servicegesellschaft mbH Boosts Stock Position in Pacira BioSciences, Inc. $PCRX",
+        "timestamp": "2026-05-02T12:39:47Z"
+      },
+      {
+        "text": "6,640 Shares in HCA Healthcare, Inc. $HCA Bought by Sandro Wealth Management LLC",
+        "timestamp": "2026-05-02T12:37:39Z"
+      },
+      {
+        "text": "BSX 72 HOUR DEADLINE REMINDER: Faruqi & Faruqi, LLP Reminds Boston Scientific (BSX) Investors of Securities Class Action Deadline on May 4, 2026",
+        "timestamp": "2026-05-02T12:37:10Z"
+      },
+      {
+        "text": "Analysts Have Conflicting Sentiments on These Healthcare Companies: Amgen (AMGN), Immunome (IMNM) and Resmed (RMD)",
+        "timestamp": "2026-05-02T12:37:03Z"
+      },
+      {
+        "text": "Amgen Inc. $AMGN Shares Sold by Strs Ohio",
+        "timestamp": "2026-05-02T12:37:01Z"
+      },
+      {
+        "text": "Cencora, Inc. $COR Shares Sold by Kornitzer Capital Management Inc. KS",
+        "timestamp": "2026-05-02T12:33:17Z"
+      },
+      {
+        "text": "Analysts Have Conflicting Sentiments on These Healthcare Companies: Amgen (AMGN), Immunome (IMNM) and Resmed (RMD)",
+        "timestamp": "2026-05-02T12:33:11Z"
+      },
+      {
+        "text": "LMG Wealth Partners LLC Acquires New Holdings in Incyte Corporation $INCY",
+        "timestamp": "2026-05-02T12:32:42Z"
+      },
+      {
+        "text": "Edwards Lifesciences Corporation $EW Stake Lessened by Kornitzer Capital Management Inc. KS",
+        "timestamp": "2026-05-02T12:32:29Z"
+      },
+      {
+        "text": "Cardinal Health, Inc. $CAH Shares Sold by LMG Wealth Partners LLC",
+        "timestamp": "2026-05-02T12:32:11Z"
+      },
+      {
+        "text": "3,167 Shares in Vertex Pharmaceuticals Incorporated $VRTX Bought by Sandro Wealth Management LLC",
+        "timestamp": "2026-05-02T12:31:35Z"
+      },
+      {
+        "text": "Integer Holdings Corporation (NYSE:ITGR) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:22:36Z"
+      },
+      {
+        "text": "Moderna, Inc. (NASDAQ:MRNA) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:19:55Z"
+      },
+      {
+        "text": "Nutex Health, Inc. (NASDAQ:NUTX) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:09:47Z"
+      },
+      {
+        "text": "Kornitzer Capital Management Inc. KS Has $11.44 Million Position in Natera, Inc. $NTRA",
+        "timestamp": "2026-05-02T12:09:39Z"
+      },
+      {
+        "text": "Horizon Investments LLC Sells 27,059 Shares of UnitedHealth Group Incorporated $UNH",
+        "timestamp": "2026-05-02T12:08:24Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Makes New Investment in Merck & Co., Inc. $MRK",
+        "timestamp": "2026-05-02T12:01:05Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Makes New $76.83 Million Investment in Pfizer Inc. $PFE",
+        "timestamp": "2026-05-02T11:57:13Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Makes New Investment in Abbott Laboratories $ABT",
+        "timestamp": "2026-05-02T11:55:00Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Buys Shares of 193,596 Intuitive Surgical, Inc. $ISRG",
+        "timestamp": "2026-05-02T11:54:52Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Purchases New Position in Thermo Fisher Scientific Inc. $TMO",
+        "timestamp": "2026-05-02T11:54:29Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Takes Position in UnitedHealth Group Incorporated $UNH",
+        "timestamp": "2026-05-02T11:54:23Z"
+      },
+      {
+        "text": "Irhythm Technologies (IRTC) Receives a Buy from Wells Fargo",
+        "timestamp": "2026-05-02T11:53:59Z"
+      },
+      {
+        "text": "Horizon Investments LLC Purchases 13,310 Shares of Intuitive Surgical, Inc. $ISRG",
+        "timestamp": "2026-05-02T11:52:52Z"
+      },
+      {
+        "text": "A Look At Charles River Laboratories (CRL) Valuation After Recent Share Weakness And Diverging Fair Value Views",
+        "timestamp": "2026-05-02T11:40:22Z"
+      },
+      {
+        "text": "Analysts Have Conflicting Sentiments on These Healthcare Companies: Phathom Pharmaceuticals (PHAT), TELA Bio (TELA) and Nanobiotix (NBTX)",
+        "timestamp": "2026-05-02T11:39:49Z"
+      },
+      {
+        "text": "Merck & Co., Inc. $MRK Shares Sold by Horizon Investments LLC",
+        "timestamp": "2026-05-02T11:39:05Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Purchases Shares of 826,930 Gilead Sciences, Inc. $GILD",
+        "timestamp": "2026-05-02T11:37:34Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Purchases Shares of 342,594 Amgen Inc. $AMGN",
+        "timestamp": "2026-05-02T11:37:03Z"
+      }
+    ],
+    "cached_at": "2026-05-02T12:39:05.380075+00:00"
+  },
+  "news_sector_energy": {
+    "value": [
+      {
+        "text": "Jefferies Cuts United Airlines (UAL) PT by $6 \u2013 Here\u2019s Why",
+        "timestamp": "2026-05-02T14:35:28Z"
+      },
+      {
+        "text": "Analysts Offer Insights on Utilities Companies: DTE Energy (DTE) and Xcel Energy (XEL)",
+        "timestamp": "2026-05-02T14:16:35Z"
+      },
+      {
+        "text": "Skycorp Solar Group Limited PN Spikes As Volume Drives Sharp Reversal",
+        "timestamp": "2026-05-02T14:09:14Z"
+      },
+      {
+        "text": "Analysts Conflicted on These Energy Names: Antero Resources (AR) and Valero Energy (VLO)",
+        "timestamp": "2026-05-02T14:05:24Z"
+      },
+      {
+        "text": "How Investors May Respond To Edison International (EIX) Reaffirmed EPS Guidance And Wildfire Risk Progress",
+        "timestamp": "2026-05-02T14:00:27Z"
+      },
+      {
+        "text": "Analysts Conflicted on These Utilities Names: Southern Co (SO) and Constellation Energy Corporation (CEG)",
+        "timestamp": "2026-05-02T14:00:13Z"
+      },
+      {
+        "text": "The Goldman Sachs Group Issues Positive Forecast for First Solar (NASDAQ:FSLR) Stock Price",
+        "timestamp": "2026-05-02T13:55:39Z"
+      },
+      {
+        "text": "US Bancorp DE Reduces Stock Holdings in ExxonMobil Corporation $XOM",
+        "timestamp": "2026-05-02T13:38:28Z"
+      },
+      {
+        "text": "NextEra Energy vs. Constellation Energy: Which Utility Stock Is Built for This Market?",
+        "timestamp": "2026-05-02T13:38:03Z"
+      },
+      {
+        "text": "CenterPoint Energy : Essentially all CenterPoint Energy customers who can receive power have been restored following significant rain and storms across the Greater Houston area on Friday",
+        "timestamp": "2026-05-02T13:19:13Z"
+      },
+      {
+        "text": "Strs Ohio Sells 13,376 Shares of NextEra Energy, Inc. $NEE",
+        "timestamp": "2026-05-02T13:08:02Z"
+      },
+      {
+        "text": "Strs Ohio Reduces Position in FedEx Corporation $FDX",
+        "timestamp": "2026-05-02T13:05:31Z"
+      },
+      {
+        "text": "Wealthfront Advisers LLC Acquires 4,878 Shares of First Solar, Inc. $FSLR",
+        "timestamp": "2026-05-02T13:00:35Z"
+      },
+      {
+        "text": "A Look At ConocoPhillips (COP) Valuation After Q1 2026 Earnings Beat And Qatar Production Cut",
+        "timestamp": "2026-05-02T12:54:16Z"
+      },
+      {
+        "text": "NextEra Energy vs. Constellation Energy: Which Utility Stock Is Built for This Market?",
+        "timestamp": "2026-05-02T12:43:57Z"
+      },
+      {
+        "text": "NextEra Energy vs. Constellation Energy: Which Utility Stock Is Built for This Market?",
+        "timestamp": "2026-05-02T12:41:58Z"
+      },
+      {
+        "text": "MasTec, Inc. (NYSE:MTZ) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:39:37Z"
+      },
+      {
+        "text": "Ping Capital Management Inc. Acquires 124,100 Shares of Petroleo Brasileiro S.A.- Petrobras $PBR",
+        "timestamp": "2026-05-02T12:39:32Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Has $1.04 Billion Stock Position in Pembina Pipeline Corp. $PBA",
+        "timestamp": "2026-05-02T12:39:22Z"
+      },
+      {
+        "text": "Wealthfront Advisers LLC Raises Position in Targa Resources, Inc. $TRGP",
+        "timestamp": "2026-05-02T12:38:24Z"
+      },
+      {
+        "text": "Sandro Wealth Management LLC Acquires Shares of 21,147 NextEra Energy, Inc. $NEE",
+        "timestamp": "2026-05-02T12:31:57Z"
+      },
+      {
+        "text": "Dominion Energy, Inc. (NYSE:D) Q1 2026 Earnings Call Transcript",
+        "timestamp": "2026-05-02T12:26:18Z"
+      },
+      {
+        "text": "Kornitzer Capital Management Inc. KS Has $7.78 Million Stock Position in Marathon Petroleum Corporation $MPC",
+        "timestamp": "2026-05-02T12:21:54Z"
+      },
+      {
+        "text": "Horizon Investments LLC Purchases 37,739 Shares of Williams Companies, Inc. (The) $WMB",
+        "timestamp": "2026-05-02T12:00:36Z"
+      },
+      {
+        "text": "April Review: Markets Advance Through Global Volatility - Raymond James - Commentaries",
+        "timestamp": "2026-05-02T12:00:19Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Invests $96.36 Million in Uber Technologies, Inc. $UBER",
+        "timestamp": "2026-05-02T11:59:23Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Acquires Shares of 187,880 Cummins Inc. $CMI",
+        "timestamp": "2026-05-02T11:59:20Z"
+      },
+      {
+        "text": "68,351 Shares in Transdigm Group Incorporated $TDG Purchased by PFA Pension Forsikringsaktieselskab",
+        "timestamp": "2026-05-02T11:56:27Z"
+      },
+      {
+        "text": "PFA Pension Forsikringsaktieselskab Takes Position in Waste Management, Inc. $WM",
+        "timestamp": "2026-05-02T11:54:37Z"
+      },
+      {
+        "text": "A Look At CSX (CSX) Valuation After Strong Q1 2026 Earnings Growth",
+        "timestamp": "2026-05-02T11:40:24Z"
+      },
+      {
+        "text": "Oppenheimer & Co. Inc. Raises Stake in Mplx Lp $MPLX",
+        "timestamp": "2026-05-02T11:39:24Z"
+      },
+      {
+        "text": "Navigator Holdings Ltd. $NVGS Shares Sold by Oppenheimer & Co. Inc.",
+        "timestamp": "2026-05-02T11:38:49Z"
+      },
+      {
+        "text": "Royal Caribbean Wants to Own Texas Market",
+        "timestamp": "2026-05-02T11:29:12Z"
+      },
+      {
+        "text": "Valero Energy Corporation $VLO Shares Bought by Oppenheimer & Co. Inc.",
+        "timestamp": "2026-05-02T11:20:26Z"
+      },
+      {
+        "text": "New York State Teachers Retirement System Increases Holdings in Marathon Petroleum Corporation $MPC",
+        "timestamp": "2026-05-02T11:14:59Z"
+      },
+      {
+        "text": "New York State Teachers Retirement System Sells 4,577 Shares of Targa Resources, Inc. $TRGP",
+        "timestamp": "2026-05-02T11:14:21Z"
+      },
+      {
+        "text": "State of New Jersey Common Pension Fund D Sells 4,016 Shares of Cheniere Energy, Inc. $LNG",
+        "timestamp": "2026-05-02T11:08:44Z"
+      },
+      {
+        "text": "RTX Corporation (NYSE: RTX) Looks Attractive After 13 Percent Three-Month Decline Even as Backlog Growth Signals Long-Term Strength",
+        "timestamp": "2026-05-02T11:05:12Z"
+      },
+      {
+        "text": "Analysts Offer Insights on Industrial Goods Companies: Boeing (BA), JB Hunt (JBHT) and Illinois Tool Works (ITW)",
+        "timestamp": "2026-05-02T10:49:06Z"
+      },
+      {
+        "text": "Jennison Associates LLC Reduces Holdings in Mplx Lp $MPLX",
+        "timestamp": "2026-05-02T10:39:24Z"
+      },
+      {
+        "text": "State of Michigan Retirement System Purchases New Stake in Oklo Inc. $OKLO",
+        "timestamp": "2026-05-02T10:39:12Z"
+      },
+      {
+        "text": "Narwhal Capital Management Has $14.52 Million Stake in ExxonMobil Corporation $XOM",
+        "timestamp": "2026-05-02T10:38:30Z"
+      },
+      {
+        "text": "ONEOK, Inc. $OKE Shares Sold by State of New Jersey Common Pension Fund D",
+        "timestamp": "2026-05-02T10:38:04Z"
+      },
+      {
+        "text": "Strategic Blueprint LLC Has $226,000 Holdings in FedEx Corporation $FDX",
+        "timestamp": "2026-05-02T10:37:31Z"
+      },
+      {
+        "text": "Mitsubishi UFJ Trust & Banking Corp Sells 204,331 Shares of Halliburton Company $HAL",
+        "timestamp": "2026-05-02T10:32:42Z"
+      },
+      {
+        "text": "Mitsubishi UFJ Trust & Banking Corp Has $11.89 Million Position in Diamondback Energy, Inc. $FANG",
+        "timestamp": "2026-05-02T10:32:34Z"
+      },
+      {
+        "text": "Mitsubishi UFJ Trust & Banking Corp Trims Holdings in Coterra Energy Inc. $CTRA",
+        "timestamp": "2026-05-02T10:32:20Z"
+      },
+      {
+        "text": "Coterra Energy Inc. $CTRA Shares Sold by Keybank National Association OH",
+        "timestamp": "2026-05-02T10:32:20Z"
+      },
+      {
+        "text": "Aptiv PLC $APTV Shares Sold by Mitsubishi UFJ Trust & Banking Corp",
+        "timestamp": "2026-05-02T10:32:06Z"
+      },
+      {
+        "text": "C.H. Robinson Worldwide, Inc. $CHRW Shares Sold by Pictet Asset Management Holding SA",
+        "timestamp": "2026-05-02T10:16:13Z"
+      }
+    ],
+    "cached_at": "2026-05-02T12:39:18.171101+00:00"
+  },
+  "news_sector_financials": {
+    "value": [
+      {
+        "text": "Global X US Preferred ETF declares monthly distribution of $0.1000",
+        "timestamp": "2026-05-02T14:39:38Z"
+      },
+      {
+        "text": "Analysts Offer Insights on Utilities Companies: DTE Energy (DTE) and Xcel Energy (XEL)",
+        "timestamp": "2026-05-02T14:16:35Z"
+      },
+      {
+        "text": "Verizon Stock Is Up 19% Over the Past Year. Here\u2019s What a Q1 Beat Raise Signal for Investors",
+        "timestamp": "2026-05-02T14:13:33Z"
+      },
+      {
+        "text": "EBITDA margin % of Pimco Municipal Income Fund II Auction Pfd Registered Shs Series B \u2013 FINRA:ALIZF4649247",
+        "timestamp": "2026-05-02T14:08:49Z"
+      },
+      {
+        "text": "AutoZone, Inc. Shs UnSponsored Canadian Depository Receipt Hedged Reg S Income Statement \u2013 TSX:AZO",
+        "timestamp": "2026-05-02T14:07:09Z"
+      },
+      {
+        "text": "Analysts Conflicted on These Utilities Names: Southern Co (SO) and Constellation Energy Corporation (CEG)",
+        "timestamp": "2026-05-02T14:00:13Z"
+      },
+      {
+        "text": "A Look At Procter & Gamble (PG) Valuation As Investor Narratives Sharply Diverge",
+        "timestamp": "2026-05-02T14:00:06Z"
+      },
+      {
+        "text": "The Goldman Sachs Group Issues Positive Forecast for First Solar (NASDAQ:FSLR) Stock Price",
+        "timestamp": "2026-05-02T13:55:39Z"
+      },
+      {
+        "text": "Newmont Corporation: Undervalued Despite Historic Cash Generation (NYSE:NEM)",
+        "timestamp": "2026-05-02T13:41:58Z"
+      },
+      {
+        "text": "Intercontinental Exchange, Inc. Just Beat Earnings Expectations: Here's What Analysts Think Will Happen Next",
+        "timestamp": "2026-05-02T13:37:44Z"
+      },
+      {
+        "text": "US Bancorp DE Has $30.98 Million Position in Edwards Lifesciences Corporation $EW",
+        "timestamp": "2026-05-02T13:37:31Z"
+      },
+      {
+        "text": "US Bancorp DE Buys 60,356 Shares of Graco Inc. $GGG",
+        "timestamp": "2026-05-02T13:32:27Z"
+      },
+      {
+        "text": "US Bancorp DE Sells 27,656 Shares of SAP SE $SAP",
+        "timestamp": "2026-05-02T13:32:23Z"
+      },
+      {
+        "text": "Baxter International (NYSE:BAX) Stock Price Expected to Rise, Barclays Analyst Says",
+        "timestamp": "2026-05-02T13:31:07Z"
+      },
+      {
+        "text": "Baxter International (NYSE:BAX) Given New $19.00 Price Target at Stifel Nicolaus",
+        "timestamp": "2026-05-02T13:31:07Z"
+      },
+      {
+        "text": "T. Rowe Price Group (NASDAQ:TROW) Price Target Raised to $90.00 at The Goldman Sachs Group",
+        "timestamp": "2026-05-02T13:29:37Z"
+      },
+      {
+        "text": "Microchip Technology Incorporated $MCHP Stock Holdings Cut by US Bancorp DE",
+        "timestamp": "2026-05-02T13:24:52Z"
+      },
+      {
+        "text": "US Bancorp DE Lowers Stock Holdings in Electronic Arts Inc. $EA",
+        "timestamp": "2026-05-02T13:21:25Z"
+      },
+      {
+        "text": "US Bancorp DE Cuts Holdings in Elevance Health, Inc. $ELV",
+        "timestamp": "2026-05-02T13:21:24Z"
+      },
+      {
+        "text": "Maplebear Inc. $CART Shares Acquired by US Bancorp DE",
+        "timestamp": "2026-05-02T13:21:23Z"
+      },
+      {
+        "text": "US Bancorp DE Sells 11,647 Shares of Digital Realty Trust, Inc. $DLR",
+        "timestamp": "2026-05-02T13:21:21Z"
+      },
+      {
+        "text": "US Bancorp DE Cuts Stake in Copart, Inc. $CPRT",
+        "timestamp": "2026-05-02T13:21:14Z"
+      },
+      {
+        "text": "US Bancorp DE Sells 5,278 Shares of Roper Technologies, Inc. $ROP",
+        "timestamp": "2026-05-02T13:21:11Z"
+      },
+      {
+        "text": "US Bancorp DE Trims Holdings in The Kroger Co. $KR",
+        "timestamp": "2026-05-02T13:20:46Z"
+      },
+      {
+        "text": "US Bancorp DE Sells 14,073 Shares of Altria Group, Inc. $MO",
+        "timestamp": "2026-05-02T13:17:55Z"
+      },
+      {
+        "text": "First Trust Multi-Asset Diversified Income Index Fund Review and Aggregate Rating (MDIV)",
+        "timestamp": "2026-05-02T13:09:50Z"
+      },
+      {
+        "text": "Unusual income/expense of Orchid Island Capital, Inc. \u2013 MUN:45U0",
+        "timestamp": "2026-05-02T13:09:49Z"
+      },
+      {
+        "text": "Preferred Bank $PFBC Shares Bought by Universal Beteiligungs und Servicegesellschaft mbH",
+        "timestamp": "2026-05-02T13:09:38Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Cuts Stock Position in Penumbra, Inc. $PEN",
+        "timestamp": "2026-05-02T13:08:52Z"
+      },
+      {
+        "text": "Earnings Beat, Raised Outlook and CFO Shift Might Change The Case For Investing In Plexus (PLXS)",
+        "timestamp": "2026-05-02T13:08:42Z"
+      },
+      {
+        "text": "Equity in earnings of Pimco Municipal Income Fund II Auction Pfd Registered Shs Series B \u2013 FINRA:ALIZF4649247",
+        "timestamp": "2026-05-02T13:08:41Z"
+      },
+      {
+        "text": "Pimco Municipal Income Fund II Auction Pfd Registered Shs Series B Earnings and Revenue \u2013 FINRA:ALIZF4649247",
+        "timestamp": "2026-05-02T13:08:41Z"
+      },
+      {
+        "text": "US Bancorp DE Has $35.23 Million Holdings in Solventum Corporation $SOLV",
+        "timestamp": "2026-05-02T13:08:19Z"
+      },
+      {
+        "text": "Strs Ohio Sells 4,486 Shares of S&P Global Inc. $SPGI",
+        "timestamp": "2026-05-02T13:08:14Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Sells 353,209 Shares of Molina Healthcare, Inc $MOH",
+        "timestamp": "2026-05-02T13:08:00Z"
+      },
+      {
+        "text": "Wealthstar Advisors LLC Buys Shares of 1,169 Eli Lilly and Company $LLY",
+        "timestamp": "2026-05-02T13:07:49Z"
+      },
+      {
+        "text": "Mizuho Securities Remains a Hold on IDEX (IEX)",
+        "timestamp": "2026-05-02T13:07:41Z"
+      },
+      {
+        "text": "Strs Ohio Has $53.95 Million Stake in Dover Corporation $DOV",
+        "timestamp": "2026-05-02T13:07:25Z"
+      },
+      {
+        "text": "Strs Ohio Sells 23,924 Shares of Digital Realty Trust, Inc. $DLR",
+        "timestamp": "2026-05-02T13:07:24Z"
+      },
+      {
+        "text": "Strs Ohio Has $137.35 Million Holdings in Wells Fargo & Company $WFC",
+        "timestamp": "2026-05-02T13:05:33Z"
+      },
+      {
+        "text": "Strs Ohio Reduces Position in FedEx Corporation $FDX",
+        "timestamp": "2026-05-02T13:05:31Z"
+      },
+      {
+        "text": "Strs Ohio Reduces Stock Holdings in Equinix, Inc. $EQIX",
+        "timestamp": "2026-05-02T13:05:26Z"
+      },
+      {
+        "text": "Strs Ohio Sells 38,544 Shares of Verizon Communications Inc. $VZ",
+        "timestamp": "2026-05-02T13:05:24Z"
+      },
+      {
+        "text": "Strs Ohio Has $70.46 Million Stake in CVS Health Corporation $CVS",
+        "timestamp": "2026-05-02T13:05:21Z"
+      },
+      {
+        "text": "Strs Ohio Sells 17,436 Shares of Linde PLC $LIN",
+        "timestamp": "2026-05-02T13:04:48Z"
+      },
+      {
+        "text": "Strs Ohio Purchases 110,781 Shares of Philip Morris International Inc. $PM",
+        "timestamp": "2026-05-02T13:02:05Z"
+      },
+      {
+        "text": "Wealthfront Advisers LLC Buys 7,164 Shares of Raymond James Financial, Inc. $RJF",
+        "timestamp": "2026-05-02T13:01:12Z"
+      },
+      {
+        "text": "Vanguard Group Inc. Boosts Stock Position in Mueller Industries, Inc. $MLI",
+        "timestamp": "2026-05-02T13:01:09Z"
+      },
+      {
+        "text": "Strs Ohio Has $69.32 Million Stock Holdings in American Express Company $AXP",
+        "timestamp": "2026-05-02T13:01:05Z"
+      },
+      {
+        "text": "Strs Ohio Has $51.09 Million Stock Holdings in Air Products and Chemicals, Inc. $APD",
+        "timestamp": "2026-05-02T13:01:04Z"
+      }
+    ],
+    "cached_at": "2026-05-02T12:39:30.384664+00:00"
+  },
+  "macro_fred": {
+    "value": {
+      "fed_funds_rate": 3.64,
+      "cpi_yoy_pct": 3.29,
+      "unemployment_rate": 4.3,
+      "macro_score": -0.1,
+      "plain_summary": "Interest rates are moderate at 3.64%. Inflation is above target at 3.3% year-over-year. Unemployment is low at 4.3%.",
+      "source": "FRED API"
+    },
+    "cached_at": "2026-05-02T11:40:20.412676"
+  },
+  "news_stock_JPM": {
+    "value": [
+      "T. Rowe Price Group (NASDAQ:TROW) Price Target Raised to $90.00 at The Goldman Sachs Group",
+      "Maplebear Inc. $CART Shares Acquired by US Bancorp DE",
+      "Strs Ohio Reduces Stock Holdings in Equinix, Inc. $EQIX",
+      "Strs Ohio Has $126.47 Million Stock Position in Citigroup Inc. $C",
+      "UBS Group AG Sells 405,692 Shares of Williams-Sonoma, Inc. $WSM",
+      "Cencora, Inc. $COR Shares Sold by Kornitzer Capital Management Inc. KS",
+      "U.S. Bancorp $USB Shares Acquired by Kornitzer Capital Management Inc. KS",
+      "Citigroup Inc. $C Shares Sold by Manhattan West Asset Management LLC",
+      "State of New Jersey Common Pension Fund D Sells 4,016 Shares of Cheniere Energy, Inc. $LNG",
+      "Kraft Heinz Company $KHC Shares Sold by Mitsubishi UFJ Trust & Banking Corp",
+      "Raymond James Financial, Inc. $RJF Shares Sold by Pictet Asset Management Holding SA",
+      "Mitsubishi UFJ Trust & Banking Corp Sells 133,316 Shares of Macy's, Inc. $M",
+      "JPMorgan Chase & Co. $JPM Shares Sold by M&T Bank Corp",
+      "Hudson Pacific Properties, Inc. $HPP Shares Sold by Davis Selected Advisers",
+      "M&T Bank Corp Sells 26,258 Shares of HealthEquity, Inc. $HQY",
+      "Davis Selected Advisers Makes New Investment in CubeSmart $CUBE",
+      "Davis Selected Advisers Buys 471,979 Shares of Wells Fargo & Company $WFC",
+      "The Boeing Company $BA Shares Sold by Citizens Financial Group Inc. RI",
+      "Danske Bank A S Has $47.59 Million Holdings in U.S. Bancorp $USB",
+      "Hurco Companies (NASDAQ:HURC) Share Price Passes Above Two Hundred Day Moving Average - Should You Sell?",
+      "Danske Bank A S Boosts Stock Position in Air Products and Chemicals, Inc. $APD",
+      "Howmet Aerospace Inc. $HWM Shares Sold by GC Wealth Management RIA LLC",
+      "Loop Industries (NASDAQ:LOOP) Stock Crosses Above 200-Day Moving Average - Here's What Happened",
+      "CPC Advisors LLC Reduces Stock Position in JPMorgan Chase & Co. $JPM",
+      "F&G Annuities & Life (NYSE:FG) Rating Increased to Buy at Wall Street Zen",
+      "PrimeEnergy (NASDAQ:PNRG) Upgraded by Wall Street Zen to \"Buy\" Rating",
+      "CytomX Therapeutics (CTMX) Expected to Announce Quarterly Earnings on Thursday",
+      "Goldman Sachs Remains a Hold on ArcelorMittal (0RP9)",
+      "Waters Corporation (NYSE:WAT) Given Consensus Recommendation of \"Moderate Buy\" by Analysts",
+      "Regeneron Pharmaceuticals (NASDAQ:REGN) Upgraded at Wall Street Zen",
+      "Heico Corporation (NYSE:HEI) Receives Consensus Recommendation of \"Moderate Buy\" from Brokerages",
+      "Gorman-Rupp (NYSE:GRC) Upgraded at Wall Street Zen",
+      "Cementos Pacasmayo S.A.A. (NYSE:CPAC) Upgraded at Wall Street Zen",
+      "Annaly Capital Management (NYSE:NLY) Upgraded by Wall Street Zen to Hold Rating",
+      "Fulcrum Therapeutics (NASDAQ:FULC) Rating Increased to Sell at Wall Street Zen",
+      "CONMED (NYSE:CNMD) Stock Rating Lowered by Wall Street Zen",
+      "Beazer Homes USA (NYSE:BZH) Upgraded at Wall Street Zen",
+      "Tractor Supply Slips as Investors Continue to Weigh Q1 Results and a Wave of Price-target Cuts",
+      "Grupo Supervielle S.A. (NYSE:SUPV) Short Interest Up 25.1% in April",
+      "BLUE OWL CAPITAL: DIVERSIFIED CAPITAL RAISING IN Q1 YIELDS $11 BILLION IN NEW COMMITMENTS ACROSS ASSET CLASSES, STRATEGIES, AND CHANNELS",
+      "Is Wells Fargo (WFC) Pricing Reflect Regulatory Progress And Recent Share Price Pullback Accurately",
+      "Morgan Stanley buys $22.4M in Bitcoin amid geopolitical tensions",
+      "iShares JP Morgan EM High Yield Bond ETF declares monthly distribution of $0.2236",
+      "Charles R. Schwab co-chairman sells $15.4m in SCHW stock",
+      "Methanex (NASDAQ:MEOH) Stock Price Expected to Rise, UBS Group Analyst Says",
+      "Carvana CFO Mark Jenkins sells $4.9m in stock, prices $378-$400",
+      "Total operating expenses of Bain Capital Specialty Finance, Inc. \u2013 MUN:618",
+      "Ellomay Capital (NYSE: ELLO) outlines 2025 risk exposure and debt load",
+      "iShares JP Morgan Broad USD Emerging Markets Bond ETF declares monthly distribution of $0.2679",
+      "Fulton Financial sells $300M in notes, plans to repay $195M debt"
+    ],
+    "cached_at": "2026-05-02T12:41:19.844913+00:00"
+  },
+  "news_stock_BAC": {
+    "value": [
+      "Eli Lilly and Company (NYSE:LLY) Given New $1,133.00 Price Target at Bank of America",
+      "US Bancorp DE Sells 27,656 Shares of SAP SE $SAP",
+      "T. Rowe Price Group (NASDAQ:TROW) Price Target Raised to $90.00 at The Goldman Sachs Group",
+      "Vanguard Group Inc. Reduces Holdings in MKS Inc. $MKSI",
+      "Bank of America Corporation $BAC Shares Sold by Strs Ohio",
+      "Cencora, Inc. $COR Shares Sold by Kornitzer Capital Management Inc. KS",
+      "OFS Capital Corporation (NASDAQ:OFS) Q1 2026 Earnings Call Transcript",
+      "PFA Pension Forsikringsaktieselskab Buys New Stake in Bank of America Corporation $BAC",
+      "Horizon Investments LLC Grows Position in Bank of America Corporation $BAC",
+      "Principal Financial Group, Inc. $PFG Shares Sold by Pictet Asset Management Holding SA",
+      "Mitsubishi UFJ Trust & Banking Corp Sells 87,061 Shares of Leidos Holdings, Inc. $LDOS",
+      "Fifth Third Bancorp Has $13.01 Million Stock Position in ASML Holding N.V. $ASML",
+      "Danske Bank A S Raises Stock Holdings in Steel Dynamics, Inc. $STLD",
+      "The Boeing Company $BA Shares Sold by Citizens Financial Group Inc. RI",
+      "Petroleo Brasileiro S.A.- Petrobras (NYSE:PBR) Receives Consensus Recommendation of \"Moderate Buy\" from Analysts",
+      "Howmet Aerospace Inc. $HWM Shares Sold by GC Wealth Management RIA LLC",
+      "Citizens Financial Group Inc. RI Invests $7.55 Million in Jacobs Solutions Inc. $J",
+      "F&G Annuities & Life (NYSE:FG) Rating Increased to Buy at Wall Street Zen",
+      "Bank of America Corp Depositary Shs Repr 1/25th 5 1/5 % Non-Cum Perp Pfd Shs Series U",
+      "McKesson (NYSE:MCK) Upgraded at Wall Street Zen",
+      "Jim Cramer\u2019s a Believer in Corning (GLW) & Data Centers",
+      "Bank of America Corp Depositary Shs Repr 1/25th Fix/Fltg Non-Cum Red Perp Registered Shs -RR-",
+      "Bank of America Corp Depositary Shs Repr 1/25th Fix/Fltg Non-Cum Red Perp Registered Shs -RR-",
+      "Bank of America Corporation Class AA Financial Statements \u2013 FINRA:BAC4222124",
+      "Is Wells Fargo (WFC) Pricing Reflect Regulatory Progress And Recent Share Price Pullback Accurately",
+      "Minerals Technologies (NYSE:MTX) Releases Q2 2026 Earnings Guidance",
+      "Charles R. Schwab co-chairman sells $15.4m in SCHW stock",
+      "Carvana CFO Mark Jenkins sells $4.9m in stock, prices $378-$400",
+      "Bank of America Corp Depositary Shs Repr 1/25th Perp Non-Cum Pfd Registered Shs Series -JJ-",
+      "Bank of America Corp Depositary Shs Repr 1/25th Perp Non-Cum Pfd Registered Shs Series -JJ-",
+      "Bitcoin On Morgan Stanley\u2019s Balance Sheet? The Answer Is Getting Interesting",
+      "Old Dominion Freight Line Analysts Increase Their Forecasts Following Strong Q1 Earnings",
+      "Bank of America Corp Depositary Shs Repr 1/25th Perp Non-Cum Pfd Registered Shs Series -JJ-",
+      "Is Canadian Imperial Bank of Commerce (TSX:CM) Still Attractive After A 79.9% One-Year Surge?",
+      "BofA raises Eversource Energy price target on NETO ROE filing By Investing.com",
+      "Columbia Bank Launches Franchise Banking Team, Hires Industry Leaders",
+      "Agnico Eagle, Eldorado Gold post Q1 earnings beat with capital returns a standout",
+      "JPMorgan Chase & Co. Lowers Service Corporation International (NYSE:SCI) Price Target to $100.00",
+      "Virtus Investment Partners (NASDAQ:VRTS) Shares Gap Down - Time to Sell?",
+      "Royal Bank Of Canada Has Lowered Expectations for Mastercard (NYSE:MA) Stock Price",
+      "EQT Active Core Infrastructure, a fund managed by EQT AB (OM:EQT) completed the acquisition of Small Cells Solutions Business from Crown Castle Inc..",
+      "Analysts Offer Insights on Industrial Goods Companies: GFL Environmental (GFL), FTI Consulting (FCN) and Canadian Pacific Kansas City (CP)",
+      "Analysts Offer Insights on Materials Companies: Vulcan Materials (VMC) and Element Solutions (ESI)",
+      "Miscellaneous funds of Bank of America Corp Shs Canadian Depositary Receipt Repr Shs Reg S \u2013 TSX:BOFA",
+      "DBRG SEC Filings - Digitalbridge Group Inc 10-K, 10-Q, 8-K Forms",
+      "Bank of America Denied Quick Appeal Over 401(k) Forfeiture Use",
+      "Non-performing loans to loan loss reserves of Bank of America Corp Shs Canadian Depositary Receipt Repr Shs Reg",
+      "Sunrise Realty Trust, Inc. (NASDAQ:SUNS) Short Interest Down 20.6% in April",
+      "Total capital ratio % of Bank of America Corp Shs Canadian Depositary Receipt Repr Shs Reg S \u2013 TSX:BOFA",
+      "Bank of America Corp Depositary Shs Repr 1/25th 5 1/5 % Non-Cum Perp Pfd Shs Series U"
+    ],
+    "cached_at": "2026-05-02T12:41:32.059108+00:00"
+  },
+  "news_stock_GS": {
+    "value": [
+      "The Goldman Sachs Group Issues Positive Forecast for First Solar (NASDAQ:FSLR) Stock Price",
+      "US Bancorp DE Buys 60,356 Shares of Graco Inc. $GGG",
+      "T. Rowe Price Group (NASDAQ:TROW) Price Target Raised to $90.00 at The Goldman Sachs Group",
+      "Universal Beteiligungs und Servicegesellschaft mbH Makes New $2.11 Million Investment in The Marzetti Company $MZTI",
+      "U.S. Bancorp $USB Shares Acquired by Kornitzer Capital Management Inc. KS",
+      "Prologis, Inc. $PLD Shares Sold by Davis Selected Advisers",
+      "Davis Selected Advisers Increases Position in State Street Corporation $STT",
+      "Howmet Aerospace Inc. $HWM Shares Sold by GC Wealth Management RIA LLC",
+      "Caisse Des Depots ET Consignations Buys 12,755 Shares of Wells Fargo & Company $WFC",
+      "Ashton Thomas Securities LLC Buys 3,894 Shares of UnitedHealth Group Incorporated $UNH",
+      "F&G Annuities & Life (NYSE:FG) Rating Increased to Buy at Wall Street Zen",
+      "Goldman Sachs Remains a Hold on ArcelorMittal (0RP9)",
+      "Annaly Capital Management (NYSE:NLY) Upgraded by Wall Street Zen to Hold Rating",
+      "Applied Industrial Technologies (NYSE:AIT) Rating Lowered to \"Hold\" at Wall Street Zen",
+      "LATAM Airlines Group (NYSE:LTM) Lowered to \"Buy\" Rating by Wall Street Zen",
+      "Minerals Technologies (NYSE:MTX) Releases Q2 2026 Earnings Guidance",
+      "Charles R. Schwab co-chairman sells $15.4m in SCHW stock",
+      "Goldman Sachs Adjusts Illinois Tool Works Price Target to $254 From $253",
+      "Old Dominion Freight Line Analysts Increase Their Forecasts Following Strong Q1 Earnings",
+      "Goldman Sachs Group, Inc. Trade Ideas \u2014 LS:920332",
+      "Energy Vault (NYSE:NRGV) Shares Down 5.7% - Here's What Happened",
+      "JPMorgan Chase & Co. Lowers Insperity (NYSE:NSP) Price Target to $33.00",
+      "JPMorgan Chase & Co. Lowers Service Corporation International (NYSE:SCI) Price Target to $100.00",
+      "Illinois Tool Works (NYSE:ITW) Price Target Cut to $295.00 by Analysts at JPMorgan Chase & Co.",
+      "Barclays introduces new planning and advice service",
+      "Diluted shares outstanding of Goldman Sachs Group, Inc. Shs Canadian Depositary Receipt Repr Shs Reg S \u2013 TSX:GS",
+      "Common equity tier 1 of Goldman Sachs Group, Inc. Shs Canadian Depositary Receipt Repr Shs Reg S \u2013 TSX:GS",
+      "UnitedHealth Stock Just Made Goldman\u2019s Top Buys List. Here\u2019s Why.",
+      "Barclays 15% Digital Notes due Dec 2, 2027 (DJP) \u2014 Barrier payoff",
+      "JetBlue Airways Target of Unusually Large Options Trading (NASDAQ:JBLU)",
+      "XRP News: Goldman Sachs Loads XRP ETF Positions as Pepeto Presale Passes $9 Million Before Listing",
+      "Keefe, Bruyette & Woods Issues Positive Forecast for T. Rowe Price Group (NASDAQ:TROW) Stock Price",
+      "Goldman Sachs Adjusts Price Target on First Solar to $310 From $300",
+      "Galaxy Digital's (GLXY) Overweight Rating Reiterated at Cantor Fitzgerald",
+      "The Goldman Sachs Group, Inc., Wilmington, DE, United States of America (USA)",
+      "Barclays Bank PLC (DJP) launches AutoCallable Notes linked to three major indexes",
+      "Barclays Bank PLC (DJP) issues 2031 Barrier Supertrack notes linked to S&P 500, DJIA",
+      "Rio Tinto\u2019s $100 Million Housing Pledge Masks Deep Analyst Divisions",
+      "Dodge & Cox discloses 4.93% stake in GSK as of April 28, filing says",
+      "Dell Technologies (NYSE:DELL) Given New $230.00 Price Target at The Goldman Sachs Group",
+      "UBS AG (AMUB) issues digital S&P 500\u00ae\u2011linked notes, $9.62M offering (due Jan 2028)",
+      "Annaly Capital Management Inc $NLY Shares Bought by Vanguard Group Inc.",
+      "Morgan Stanley Names Targa Resources Top Midstream Pick",
+      "Bitcoin Giant Sees a Ripple: Fidelity\u2019s FBTC ETF Records Mild Outflow as Price Stalls",
+      "HC Wainwright Decreases Earnings Estimates for GoldMining",
+      "Vanguard Group Inc. Has $1.30 Billion Stock Holdings in RBC Bearings Incorporated $RBC",
+      "Vanguard Group Inc. Trims Stock Holdings in XPO, Inc. $XPO",
+      "Short Interest in ProShares UltraPro QQQ (NASDAQ:TQQQ) Decreases By 14.0%",
+      "Globe Life Inc. $GL Shares Acquired by Vanguard Group Inc.",
+      "Seaport Therapeutics $254.9M IPO priced; PureTech (PRTC) retains stake"
+    ],
+    "cached_at": "2026-05-02T12:41:44.238360+00:00"
+  },
+  "news_stock_XOM": {
+    "value": [
+      "US Bancorp DE Reduces Stock Holdings in ExxonMobil Corporation $XOM",
+      "Narwhal Capital Management Has $14.52 Million Stake in ExxonMobil Corporation $XOM",
+      "Analysts Offer Insights on Energy Companies: Conocophillips (COP) and DT Midstream (DTM)",
+      "Phillips 66 (NYSE:PSX) Rating Increased to Strong-Buy at Wall Street Zen",
+      "Imperial Oil Ltd (IMO) Q1 2026 Earnings Call Highlights: Navigat",
+      "Petroleo Brasileiro SA.- Petrobras (PBR) is attracting investor attention: Here is what you should know",
+      "Should Invesco Large Cap Value ETF (PWV) Be on Your Investing Radar?",
+      "DT Midstream (DTM) Margin Strength In Q1 2026 Tests Premium P/E Narrative",
+      "ExxonMobil Corporation (NYSE:XOM) to Issue Quarterly Dividend of $1.03",
+      "Oil Near $100 Raises Fresh Concerns Over Inflation",
+      "Barclays lifts 2026 Brent forecast to $100 on prolonged Hormuz disruption",
+      "Marathon Petroleum Stock Is Trending Overnight: Here's Why",
+      "Imperial Oil churning out more diesel, jet fuel as Mideast war drives up prices",
+      "Nasdaq Jumps Over 1%; Exxon Mobil Posts Upbeat Revenue",
+      "Imperial Oil Ltd Stock (IMO) Moved Down by 5.34% on May 1: Drivers Behind the Movement",
+      "Exxon, Chevron Beat Profit Estimates on War-Driven Oil Rally",
+      "Imperial Oil (NYSEAMERICAN:IMO) Shares Gap Down - Should You Sell?",
+      "Ituran Location and Control Ltd stock hits all-time high at 58.46 USD",
+      "CrossAmerica Partners, PMG join Mako Networks' cloud-managed connectivity platform",
+      "CrossAmerica Partners, PMG join Mako Networks' cloud-managed connectivity platform",
+      "Horizon Kinetics buys $437 in Texas Pacific Land stock By Investing.com",
+      "Exxon Mobil Beats On Revenue Despite Middle East Turbulence, Profit Slides",
+      "bp considers exit from UK North Sea as CEO reviews upstream portfolio",
+      "Exxon Mobil shares slip after net income falls sharply despite earnings beat",
+      "U.S. oil prices will exceed Iran wartime high to above $125 as conflict drags on, Kalshi traders say",
+      "Central Securities Corp stock hits all-time high at 53.9 USD",
+      "Diamondback Energy\u2019s Endeavor Deal Reshapes Exposure To Post OPEC Oil Volatility",
+      "Oil Prices Up 9% for the Week",
+      "Imperial Oil (TSX: IMO) Q1 2026 profit at $940M as cash flow eases",
+      "Wealthfront Advisers LLC Grows Stock Holdings in ExxonMobil Corporation $XOM",
+      "Chevron profit beats estimates on war-driven surge in oil prices",
+      "Chevron beats profit forecasts as higher prices, Hess assets offset war-related outages",
+      "Exxon Profit Surprises Analysts Despite Iran War\u2019s Tumult",
+      "Exxon: Q1 Earnings Snapshot",
+      "Exxon Mobil Corp. Reports Fall In Q1 Income",
+      "ExxonMobil Announces First-Quarter 2026 Results",
+      "Earnings Flash (XOM) Exxon Mobil Corporation Reports Q1 Revenue $83.14B, vs. FactSet Est of $81.13B",
+      "Strategic Blueprint LLC Lowers Holdings in ExxonMobil Corporation $XOM",
+      "Exxon, Chevron Beat Profit Estimates",
+      "Comerica Bank Trims Stake in ExxonMobil Corporation $XOM",
+      "Pearson posts solid Q1 performance, sales grow 4pc",
+      "Subsea7 and SLB alliance secures Angola contract with ExxonMobil",
+      "Liquid Carbon Dioxide Market Size Forecast to Hit USD 7.2 Billion",
+      "ExxonMobil Corporation (NYSE:XOM) Short Interest Down 19.2% in April",
+      "Exxon: Q1 Earnings Snapshot",
+      "ConocoPhillips (COP) Margin Drop To 13.2% Tests Bullish Profitability Narratives",
+      "A Look At Woodside Energy Group\u2019s Valuation As Quarterly Results Beat Revenue Forecasts Despite Cyclone Disruptions",
+      "Exxon Mobil Corporation (XOM): Our Calculation of Intrinsic Value",
+      "Enterprise Products CEO: Strait of Hormuz Blockage Could Affect Up to 15 Million Barrels Per Day - News and Statistics",
+      "Upcoming Earnings Reports for Exxon Mobil Corporation (XOM) and Others"
+    ],
+    "cached_at": "2026-05-02T12:41:56.455153+00:00"
+  },
+  "news_stock_CVX": {
+    "value": [
+      "US Bancorp DE Reduces Stock Holdings in ExxonMobil Corporation $XOM",
+      "Narwhal Capital Management Has $14.52 Million Stake in ExxonMobil Corporation $XOM",
+      "Phillips 66 (NYSE:PSX) Rating Increased to Strong-Buy at Wall Street Zen",
+      "Petroleo Brasileiro SA.- Petrobras (PBR) is attracting investor attention: Here is what you should know",
+      "DT Midstream (DTM) Margin Strength In Q1 2026 Tests Premium P/E Narrative",
+      "ExxonMobil Corporation (NYSE:XOM) to Issue Quarterly Dividend of $1.03",
+      "Oil Near $100 Raises Fresh Concerns Over Inflation",
+      "Marathon Petroleum Stock Is Trending Overnight: Here's Why",
+      "Imperial Oil Ltd Stock (IMO) Moved Down by 5.34% on May 1: Drivers Behind the Movement",
+      "Exxon, Chevron Beat Profit Estimates on War-Driven Oil Rally",
+      "Matador Resources and SM Energy Shares Are Falling, What You Need To Know",
+      "bp considers exit from UK North Sea as CEO reviews upstream portfolio",
+      "Exxon Mobil shares slip after net income falls sharply despite earnings beat",
+      "U.S. oil prices will exceed Iran wartime high to above $125 as conflict drags on, Kalshi traders say",
+      "Diamondback Energy\u2019s Endeavor Deal Reshapes Exposure To Post OPEC Oil Volatility",
+      "Oil Prices Up 9% for the Week",
+      "Wealthfront Advisers LLC Grows Stock Holdings in ExxonMobil Corporation $XOM",
+      "American Water Expands 2026 Water Grants As AWK Investors Watch Costs And Merger Risk",
+      "Old National Bancorp Stock Gets a $5.9 Million Comerica Signal as Buybacks Take Focus",
+      "After the close May 12, Tenon Medical will break down Q1 results",
+      "Chevron profit beats estimates on war-driven surge in oil prices",
+      "Chevron beats profit forecasts as higher prices, Hess assets offset war-related outages",
+      "AirSculpt lines up May investor conferences after May 8 earnings call",
+      "nVent puts quarterly results online, investor call starts at 9 a.m. ET",
+      "Only FDA-approved infantile hemangioma drug returns with $0 copay",
+      "ExxonMobil Announces First-Quarter 2026 Results",
+      "Earnings Flash (XOM) Exxon Mobil Corporation Reports Q1 Revenue $83.14B, vs. FactSet Est of $81.13B",
+      "Chevron Blows Away Estimates on War-Driven Surge in Oil Prices",
+      "Strategic Blueprint LLC Lowers Holdings in ExxonMobil Corporation $XOM",
+      "Exxon, Chevron Beat Profit Estimates",
+      "Chevron Gears Up For Q1 Print; Here Are The Recent Forecast Changes From Wall Street's Most Accurate Analysts",
+      "Chevron: Q1 Earnings Snapshot",
+      "ExxonMobil Corporation (NYSE:XOM) Short Interest Down 19.2% in April",
+      "Weichai-controlled Power Solutions (NASDAQ: PSIX) details pay, ownership and plans",
+      "New NCLH (NYSE: NCLH) CEO granted $48M equity in 2026 proxy",
+      "ConocoPhillips (COP) Margin Drop To 13.2% Tests Bullish Profitability Narratives",
+      "A Look At Woodside Energy Group\u2019s Valuation As Quarterly Results Beat Revenue Forecasts Despite Cyclone Disruptions",
+      "Enterprise Products CEO: Strait of Hormuz Blockage Could Affect Up to 15 Million Barrels Per Day - News and Statistics",
+      "Antero Resources Q1 Earnings Miss Estimates, Revenues Increase Y/Y",
+      "Australia Is Struggling to Meet Asia\u2019s Rising LNG Needs, Chevron Says",
+      "Exxon Mobil vs. Chevron: Tracking Revenue Scale and Stability Over Two Years",
+      "Following UAE\u2019s OPEC Exit Shock, Diamondback Energy Could Be the Smartest Bet Now",
+      "Mitsubishi UFJ Trust & Banking Corp Lowers Stock Holdings in Devon Energy Corporation $DVN",
+      "Hess Corporation Stock (US42809H1077): Chevron Closes $53 Billion Acquisition Deal",
+      "Exxon Mobil Corp. Stock (US30231G1022): Q1 2026 Earnings Set for Release Today",
+      "D.A. Davidson & CO. Sells 11,479 Shares of ExxonMobil Corporation $XOM",
+      "Pictet Asset Management Holding SA Grows Stake in ExxonMobil Corporation $XOM",
+      "Diamondback Energy Stock (US25278X1090): Shares Dip 1.8% Amid Oil Price Volatility",
+      "Chevron Corp. Stock (US1667641005): Declares Quarterly Dividend of $1.71 Per Share",
+      "AMG National Trust Bank Has $1.16 Million Position in PayPal Holdings, Inc. $PYPL"
+    ],
+    "cached_at": "2026-05-02T12:42:08.673364+00:00"
+  },
+  "news_stock_COP": {
+    "value": [
+      "A Look At ConocoPhillips (COP) Valuation After Q1 2026 Earnings Beat And Qatar Production Cut",
+      "Analysts Offer Insights on Energy Companies: Conocophillips (COP) and DT Midstream (DTM)",
+      "Analysts Offer Insights on Energy Companies: Conocophillips (COP) and DT Midstream (DTM)",
+      "Phillips 66 (NYSE:PSX) Rating Increased to Strong-Buy at Wall Street Zen",
+      "Petroleo Brasileiro SA.- Petrobras (PBR) is attracting investor attention: Here is what you should know",
+      "Should Invesco Large Cap Value ETF (PWV) Be on Your Investing Radar?",
+      "Oil Near $100 Raises Fresh Concerns Over Inflation",
+      "Barclays lifts 2026 Brent forecast to $100 on prolonged Hormuz disruption",
+      "Imperial Oil Ltd Stock (IMO) Moved Down by 5.34% on May 1: Drivers Behind the Movement",
+      "Matador Resources and SM Energy Shares Are Falling, What You Need To Know",
+      "bp considers exit from UK North Sea as CEO reviews upstream portfolio",
+      "Exxon Mobil shares slip after net income falls sharply despite earnings beat",
+      "ConocoPhillips Q1 2026 earnings fall 21% to $2.2bn",
+      "Analysts Offer Insights on Energy Companies: Nabors Industries (NBR), Conocophillips (COP) and Precision Drilling (PDS)",
+      "Analysts Offer Insights on Energy Companies: Nabors Industries (NBR), Conocophillips (COP) and Precision Drilling (PDS)",
+      "Chevron beats profit forecasts as higher prices, Hess assets offset war-related outages",
+      "ExxonMobil Announces First-Quarter 2026 Results",
+      "Invesco Commodity ETF: 24% Energiepreisanstieg erwartet",
+      "ConocoPhillips (COP) Margin Drop To 13.2% Tests Bullish Profitability Narratives",
+      "Sempra Announces Strategic Partnership with ConocoPhillips for Port Arthur LNG",
+      "ConocoPhillips (NYSE:COP) Announces Quarterly Earnings Results, Beats Expectations By $0.34 EPS",
+      "ConocoPhillips Earnings Slip as Output Falls",
+      "A Look At Woodside Energy Group\u2019s Valuation As Quarterly Results Beat Revenue Forecasts Despite Cyclone Disruptions",
+      "Mach Natural Resources targets increased natural gas production with strategic Anadarko drilling in Q4 2025",
+      "Enterprise Products CEO: Strait of Hormuz Blockage Could Affect Up to 15 Million Barrels Per Day - News and Statistics",
+      "ConocoPhillips Holds the Line on Output as Oil, Natural Gas Prices Soar",
+      "ConocoPhillips (COP) Q1 2026 Earnings Transcript",
+      "ConocoPhillips 2026 Q1 - Results - Earnings Call Presentation (NYSE:COP) 2026-04-30",
+      "Earnings Preview: Mach Natural Resources LP (MNR) Q1 Earnings Expected to Decline",
+      "ConocoPhillips (NYSE:COP) Surprises With Strong Q1 CY2026",
+      "ConocoPhillips reports profits drop as production outlook trimmed",
+      "ConocoPhillips (NYSE:COP) Surprises With Strong Q1 CY2026",
+      "ConocoPhillips cuts Q1 2026 production outlook, beats earnings",
+      "ConocoPhillips cuts production guidance as Middle East war disrupts operations (COP:NYSE)",
+      "The Zacks Analyst Blog Highlights Tesla, ConocoPhillips, Parker-Hannifin and Coffee",
+      "Northern Oil and Gas, Inc. (NYSE:NOG) Q1 2026 Earnings Call Transcript",
+      "Assessing Suncor Energy (TSX:SU) Valuation After Its Strong Multi Year Shareholder Returns",
+      "Zacks Research Upgrades ConocoPhillips (NYSE:COP) to Strong-Buy",
+      "ConocoPhillips (NYSE: COP) Q1 2026 earnings hit $2.2B on strong cash flow",
+      "ConocoPhillips: Q1 Earnings Snapshot",
+      "ConocoPhillips Earnings Beat Expectations. Why the Stock Is Falling.",
+      "Earnings Flash (PWR) Quanta Services, Inc. Posts Q1 Adjusted EPS $2.68 per Share, vs. FactSet Est of $2.04",
+      "ConocoPhillips forecasts lower annual production",
+      "ConocoPhillips announces first-quarter 2026 results and quarterly dividend",
+      "Exxon Mobil Corp. Stock (US30231G1022): Q1 2026 Earnings Set for Release Today",
+      "Ashton Thomas Private Wealth LLC Sells 31,522 Shares of ConocoPhillips $COP",
+      "ConocoPhillips (COP) Declares $0.84 Quarterly Dividend; 2.6% Yield",
+      "ConocoPhillips: Q1 Earnings Snapshot",
+      "Shell and BP rise as Brent oil price surges above $126 on fears of US escalation of Iran war",
+      "Goldman says UAE's exit from OPEC raises medium-term oil supply upside risk"
+    ],
+    "cached_at": "2026-05-02T12:42:20.844608+00:00"
+  },
+  "news_stock_NVDA": {
+    "value": [
+      "NextEra Energy vs. Constellation Energy: Which Utility Stock Is Built for This Market?",
+      "Lam Research Corporation $LRCX Shares Sold by Strs Ohio",
+      "PFA Pension Forsikringsaktieselskab Makes New $172.73 Million Investment in Lam Research Corporation $LRCX",
+      "CapWealth Advisors LLC Reduces Position in RTX Corporation $RTX",
+      "Is This Acquisition a Game Changer for Netflix?",
+      "The Bull Case For Motorola Solutions (MSI) Could Change Following New Public Safety AI And RF Sensing Launches",
+      "Artemis Investment Management LLP Has $88.35 Million Position in Lam Research Corporation $LRCX",
+      "Baxter Bros Inc. Lowers Stock Position in Alphabet Inc. $GOOGL",
+      "NVIDIA Corporation $NVDA Stock Holdings Cut by Cove Private Wealth LLC",
+      "Arteris (NASDAQ:AIP) Lowered to Hold Rating by Wall Street Zen",
+      "Teradyne Inc. stock outperforms competitors on strong trading day",
+      "Coherent to Report Earnings on May 6. Can CPO Become Its New Engine of Growth?",
+      "Why Is Lululemon Stock Crashing and is it a Buying Opportunity?",
+      "Microsoft, Amazon hand Pentagon more control over AI systems",
+      "Defiance Quantum ETF Surges 73 Percent as Quantum Computing Nears Maturity",
+      "Alphabet nears $5T market cap, could surpass Nvidia as most valuable company",
+      "Lightwave Logic (LWLG) Soars to 4-Year High Ahead of Business Updates",
+      "RTX (NYSE:RTX) Stock Price Down 1.1% - What's Next?",
+      "Texas Instruments senior VP Gary Mark sells $3.82m in company stock",
+      "TD (NYSE: TD) prices $1,776,000 auto\u2011call notes linked to DELL, MU, NVDA, PLTR",
+      "Corning Inc Stock (GLW) Closed Down by 3.69% on May 1: Key Drivers Unveiled",
+      "Tesla, Nvidia, Intel: April's Most-Searched Tickers Revealed - Amazon.com (NASDAQ:AMZN), Avis Budget Gr",
+      "Jim Cramer on Ciena: \"Up 100% Is a Little Bit Too Hot for Me\"",
+      "Western Digital Is a Key Beneficiary of the AI Infrastructure Buildout",
+      "Blackstone Inc. Creates N1 AI Unit Around OpenAI, Anthropic Bets as Credit Fund Faces Pressure",
+      "Assessing Regions Financial (RF) Valuation After Recent Share Price Momentum",
+      "Lumentum Holdings Inc Stock (LITE) Moved Up by 7.77% on May 1: What Signal Does It Send?",
+      "QTR ETF Volume Spikes 32\u00d7 as Nvidia Faces Pressure",
+      "Nasdaq Composite Posts Best Month In 6 Years As AI Boom Powers Tech Surge \u2014 Alphabet, Intel Stocks Power The Super Rally",
+      "Morgan Stanley Doubles Caterpillar Price Target to $915: Is This the Most Underrated Industrial of 2026?",
+      "Should You Add ANET Stock to Your Portfolio Ahead of Q1 Earnings?",
+      "Should You Add ANET Stock to Your Portfolio Ahead of Q1 Earnings?",
+      "Sandisk Stock Falls From Record After Earnings",
+      "Bank of America Maintains Buy Rating on Nvidia Corp. (NVDA)",
+      "EV Policy Collapse and AI Megacap Drift: What DRIV Investors Must Watch in 2026",
+      "The Zacks Analyst Blog Highlights NVIDIA, Broadcom, Micron Technology, Western Digital, Vertiv and others",
+      "Ryder System stock hits all-time high at 257.73 USD",
+      "Donaldson Benefits From Business Strength Amid Headwinds",
+      "Axt Inc stock hits all-time high at 91.1 USD",
+      "Merck's Biggest Looming Rival In Cancer Just Took A Gut Punch",
+      "Lumentum Holdings Inc stock hits all-time high at 962.56 USD",
+      "How Tech Became Everything To Everyone",
+      "Is Analog Devices (ADI) Pricing In Too Much Optimism After Its Recent Share Price Surge",
+      "As the United States Looks to Firm Up Energy Security, Is U.S.-Based Uranium Miner Energy Fuels (UUUU) a Buy?",
+      "Dell Technologies (NYSE:DELL) Given New $230.00 Price Target at The Goldman Sachs Group",
+      "Is Diamondback Stock Worth Buying Before Q1 Earnings Release?",
+      "Options Traders Are Betting on Increasingly Diverging Paths for Intel Stock in 2026",
+      "AMD Delivers 5x Stock Returns, Steamrolls Nvidia",
+      "Buy AMD Stock Before Q1 Earnings: Here's What You Should Know",
+      "A major shift could soon happen in the Mag 7"
+    ],
+    "cached_at": "2026-05-02T12:42:33.051501+00:00"
+  },
+  "news_stock_MSFT": {
+    "value": [
+      "Arista Networks Stock Is Up 90% in the Past Year. Here\u2019s What Analysts Expect From Q1 Earnings",
+      "Lam Research Corporation $LRCX Shares Sold by Strs Ohio",
+      "Does CoStar\u2019s Strong Q1 and Homes.com Profit Momentum Reshape The Bull Case For CoStar Group (CSGP)?",
+      "Ventas, Inc. $VTR Stake Lessened by Pictet Asset Management Holding SA",
+      "Mitsubishi UFJ Trust & Banking Corp Sells 87,061 Shares of Leidos Holdings, Inc. $LDOS",
+      "Citizens Financial Group Inc. RI Buys 7,260 Shares of Intel Corporation $INTC",
+      "The Bull Case For Motorola Solutions (MSI) Could Change Following New Public Safety AI And RF Sensing Launches",
+      "Rep. Lizzie Fletcher Sells Apple Inc. (NASDAQ:AAPL) Shares",
+      "Rep. Lizzie Fletcher Sells Off Shares of McKesson Corporation (NYSE:MCK)",
+      "Microsoft, Amazon hand Pentagon more control over AI systems",
+      "Boeing Company Shs -CAD hedged- Canadian Depositary Receipt Repr Shs Reg S Trade Ideas \u2014 TSX:BA",
+      "Alphabet nears $5T market cap, could surpass Nvidia as most valuable company",
+      "Lightwave Logic (LWLG) Soars to 4-Year High Ahead of Business Updates",
+      "Why Zscaler Stock Jumped Today Despite a Wall Street Target Cut",
+      "GitLab (NASDAQ: GTLB) details 2026 virtual meeting, board elections and pay vote",
+      "Northrop Grumman Honors Top Suppliers Driving Industrial Innovation",
+      "NICE Ltd Extends AI Reach With Major CXone And Cognigy Wins",
+      "Oracle Stock Jumps After Pentagon AI Win, OpenAI Reassurance",
+      "Circle Internet Group Inc Stock (CRCL) Closed Up by 9.64% on May 1: A Full Analysis",
+      "Brookfield Renewable Partners Q1 2026 Earnings Call Transcript",
+      "Reddit Inc Stock (RDDT) Moved Up by 13.82% on May 1: Drivers Behind the Movement",
+      "The Agentic AI Advantage",
+      "CoreWeave Inc Stock (CRWV) Moved Up by 7.42% on May 1: Drivers Behind the Movement",
+      "Musk teases Bill Gates as the first Tesla Semi rolls off the volume production line at Giga Nevada",
+      "Dominion Energy Faces Data Center Demand Test as Virginia Load Outlook Shapes Rate Case",
+      "Blackstone Inc. Creates N1 AI Unit Around OpenAI, Anthropic Bets as Credit Fund Faces Pressure",
+      "Strategy Inc Stock (MSTR) Moved Up by 7.06% on May 1: Facts Behind the Movement",
+      "QTR ETF Volume Spikes 32\u00d7 as Nvidia Faces Pressure",
+      "Earnings call transcript: CCC Intelligent Solutions Q1 2026 beats forecasts",
+      "Analysts Offer Insights on Technology Companies: Arista Networks (ANET) and Datadog (DDOG)",
+      "JetBlue Airways Target of Unusually Large Options Trading (NASDAQ:JBLU)",
+      "Dominion Energy Faces Data Center Demand Test as Virginia Load Outlook Shapes Rate Case",
+      "Agilysys, Teradata, and Rapid7 Shares Are Soaring, What You Need To Know",
+      "Applovin Corp Stock (APP) Moved Up by 3.22% on May 1: What Investors Need To Know",
+      "Shopify Inc Stock (SHOP) Moved Up by 4.04% on May 1: Key Drivers Unveiled",
+      "How Will Vertex Pharmaceuticals Stock React To Its Upcoming Earnings?",
+      "Emerson Electric Stock Is Up 36% Over the Past Year: Why the Model Shows 8% Annual Returns",
+      "How Tech Became Everything To Everyone",
+      "Salesforce Inc Stock (CRM) Opened Up by 5.02% on May 1: Key Drivers Unveiled",
+      "Palantir Technologies Inc Stock (PLTR) Opened Up by 4.31% on May 1: Drivers Behind the Movement",
+      "Hershey Beat Q1 2026 Estimates by Nearly 15%. Can the Stock Reach $236 by 2027?",
+      "Inuvo nominates adtech investor Sanja Partalo to board By Investing.com",
+      "Palo Alto Networks Expands AI Security Reach With Armadin And Portkey Deals",
+      "Channel catch-up: News in brief",
+      "Sigma Planning Corp Buys 5,202 Shares of International Business Machines Corporation $IBM",
+      "Record Deal Wins Send Aehr Test (AEHR)\u2019s Shares Up 140% In April",
+      "Investor Interest Peaks: Why TCS, Infosys, HCLTech Are Most-Searched Companies In Q4 Earnings Season",
+      "Arch Capital Group Ltd. (NASDAQ:ACGL) Short Interest Update",
+      "Apple\u2019s new CEO said he will continue the company's tradition of secrecy\u2014and Wall Street loved it",
+      "Ingram Micro Q1 2026 Earnings Call Transcript"
+    ],
+    "cached_at": "2026-05-02T12:42:45.284527+00:00"
+  },
+  "news_stock_AAPL": {
+    "value": [
+      "Analysts Conflicted on These Technology Names: Zeta Global Holdings Corp (ZETA), CCC Intelligent Solutions Holdings (CCC) and Apple (AAPL)",
+      "Benzinga Bulls And Bears: Apple, Intel, Tesla \u2014 And Markets Extend April Rally",
+      "Strs Ohio Purchases 80,141 Shares of Qualcomm Incorporated $QCOM",
+      "Kornitzer Capital Management Inc. KS Trims Holdings in Walmart Inc. $WMT",
+      "Mutual Advisors LLC Decreases Holdings in The Walt Disney Company $DIS",
+      "Oppenheimer & Co. Inc. Trims Stake in Walmart Inc. $WMT",
+      "Mitsubishi UFJ Trust & Banking Corp Sells 87,061 Shares of Leidos Holdings, Inc. $LDOS",
+      "NBT Bank N A NY Has $74.55 Million Stake in Apple Inc. $AAPL",
+      "Prosperity Advisers LLC Purchases New Shares in Apple Inc. $AAPL",
+      "Ritholtz Wealth Management Purchases 23,521 Shares of Apple Inc. $AAPL",
+      "Apple Inc. $AAPL Shares Sold by Factory Mutual Insurance Co.",
+      "Rep. Lizzie Fletcher Sells Apple Inc. (NASDAQ:AAPL) Shares",
+      "Rep. Lizzie Fletcher Sells Off Shares of McKesson Corporation (NYSE:MCK)",
+      "Rep. Lizzie Fletcher Sells Off Shares of Quanta Services, Inc. (NYSE:PWR)",
+      "Jim Cramer\u2019s a Believer in Corning (GLW) & Data Centers",
+      "Why it's so Enticing to Bite on Apple's Stock After Record Q2 Results",
+      "A Look At Coherent (COHR) Valuation After Strong Recent Share Price Momentum",
+      "Texas Instruments senior VP Gary Mark sells $3.82m in company stock",
+      "iPhone and Services Drive Apple to Record Q2 2026 Despite Supply Constraints",
+      "Apple Raises Mac Mini\u2019s Starting Price to $799 After AI Frenzy Drains Supply",
+      "Stock Market Today: SPY, QQQ Climb to Record Highs on Tech Momentum as Trump Orders New EU Auto Tariffs",
+      "Apple discontinues 256GB Mac mini; starting price climbs to $799",
+      "Tim Cook says Apple will seek tariff refunds to invest in the US",
+      "Form ARS ARROW FINANCIAL CORP For: Dec 31",
+      "Barry Schwartz\u2019s Top Picks: Fairfax, Fair Isaac Corp, TransDigm Group Inc",
+      "QTR ETF Volume Spikes 32\u00d7 as Nvidia Faces Pressure",
+      "IES Holdings posts strong Q2 results, backlog surges",
+      "\u2018That Was an Impressive Quarter\u2019: Morgan Stanley Hikes Apple (AAPL) Stock\u2019s Price Target Following Strong Earnings",
+      "Cboe Global Markets (CBOE) Jumps 8.7% to $326.24",
+      "Ryder System stock hits all-time high at 257.73 USD",
+      "Apple, Merck Share Gains Lead Dow's 200-Point Climb",
+      "Apple Earnings: Let the iPhone 17 Cycle Rip",
+      "[424B2] BARCLAYS BANK PLC Prospectus Supplement",
+      "East LA Resident Who Defrauded Apple Inc. to Be Sentenced",
+      "Apple just posted $111 billion in revenue. Now its CFO and incoming CEO are teaming up",
+      "Verity Asset Management Inc. Trims Stock Holdings in Taiwan Semiconductor Manufacturing Company Ltd. $TSM",
+      "Sirius XM Holdings Inc. (NASDAQ:SIRI) Q1 2026 Earnings Call Transcript",
+      "Vanguard Group Inc. Has $1.34 Billion Stake in Skyworks Solutions, Inc. $SWKS",
+      "Research Alert: CFRA Maintains Buy Opinion On Shares Of Apple Inc.",
+      "Jim Cramer on MP Materials: \u201cThey\u2019ve Got the Government\u2019s Backing\u201d",
+      "Oppenheimer Asset Management Inc. Buys 20,905 Shares of Qualcomm Incorporated $QCOM",
+      "A major shift could soon happen in the Mag 7",
+      "Apple\u2019s new CEO said he will continue the company's tradition of secrecy\u2014and Wall Street loved it",
+      "Massachusetts Financial Services Co. MA Cuts Stock Holdings in Apple Inc. $AAPL",
+      "Apple tops Q2 earnings estimates on strong iPhone, China sales",
+      "Apple climbs on earnings as China 'now a strong tailwind', says Wedbush",
+      "Comstock Holding (NASDAQ: CHCI) posts $62M FY2025 revenue; Reston Station delivers",
+      "367,556 Shares in Apple Inc. $AAPL Purchased by GLP Holdings LLLP",
+      "Reading International (NASDAQ: RDI) expands 2025 governance and pay disclosures",
+      "AI Stocks Rally as Qualcomm and Lightwave Lead Late April Surge"
+    ],
+    "cached_at": "2026-05-02T12:42:57.530496+00:00"
+  },
+  "fundamentals_stock_XOM": {
+    "value": {
+      "pe_ratio": 22.8,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": -1.3,
+      "health_score": 0.4,
+      "health_label": "fair",
+      "volatility": "low",
+      "beta": 0.29,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:43:46.199964"
+  },
+  "fundamentals_stock_CVX": {
+    "value": {
+      "pe_ratio": 28.8,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": -8.2,
+      "health_score": 0.1,
+      "health_label": "mixed",
+      "volatility": "low",
+      "beta": 0.59,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:43:58.386433"
+  },
+  "fundamentals_stock_COP": {
+    "value": {
+      "pe_ratio": 20.9,
+      "debt_to_equity": 0.0,
+      "revenue_growth_pct": -5.3,
+      "health_score": 0.4,
+      "health_label": "fair",
+      "volatility": "low",
+      "beta": 0.19,
+      "source": "Alpha Vantage OVERVIEW"
+    },
+    "cached_at": "2026-05-02T11:44:10.604052"
+  },
+  "momentum_stock_XOM": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:45:35.884493"
+  },
+  "momentum_stock_CVX": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:45:48.021957"
+  },
+  "momentum_stock_COP": {
+    "value": {
+      "change_5d_pct": 0.0,
+      "change_10d_pct": 0.0,
+      "change_30d_pct": 0.0,
+      "momentum_score": 0.0,
+      "trend": "flat",
+      "source": "Alpha Vantage (no data)"
+    },
+    "cached_at": "2026-05-02T11:46:00.225427"
+  }
+}

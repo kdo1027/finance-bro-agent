@@ -15,10 +15,12 @@ Architecture:
 """
 
 import json
+import os
 from typing import Annotated, TypedDict
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 
@@ -44,11 +46,39 @@ class AgentState(TypedDict):
 
 # LLM Setup
 
+def _primary_llm(temperature: float = 0.3):
+    """Google Gemini if key is present, otherwise OpenAI."""
+    if os.getenv("GOOGLE_API_KEY"):
+        return ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=temperature)
+    if os.getenv("OPENAI_API_KEY"):
+        return ChatOpenAI(model="gpt-4o-mini", temperature=temperature)
+    raise ValueError("Set GOOGLE_API_KEY or OPENAI_API_KEY in .env")
+
+
+def _openai_fallback(temperature: float = 0.3):
+    """OpenAI fallback — only created when both keys are present."""
+    if os.getenv("GOOGLE_API_KEY") and os.getenv("OPENAI_API_KEY"):
+        return ChatOpenAI(model="gpt-4o-mini", temperature=temperature)
+    return None
+
+
 def get_llm(temperature: float = 0.3):
-    """
-    Initialize the LLM
-    """
-    return ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=temperature)
+    """LLM for plain invoke() calls, with OpenAI fallback on any exception."""
+    primary = _primary_llm(temperature)
+    fallback = _openai_fallback(temperature)
+    if fallback:
+        return primary.with_fallbacks([fallback])
+    return primary
+
+
+def get_extraction_llm(schema, temperature: float = 0.3):
+    """Structured-output chain with OpenAI fallback."""
+    primary = _primary_llm(temperature)
+    fallback = _openai_fallback(temperature)
+    chain = primary.with_structured_output(schema)
+    if fallback:
+        return chain.with_fallbacks([fallback.with_structured_output(schema)])
+    return chain
 
 
 def _text(response) -> str:
@@ -134,13 +164,37 @@ def constraints_node(state: AgentState) -> dict:
     }
 
 
+_DISPLAY_LABELS = {
+    "etfs_or_mutual_funds": "ETFs or Mutual Funds",
+    "options_or_futures":   "Options or Futures",
+    "none_yet":             "None yet",
+    "less_than_1_year":     "Less than 1 year",
+    "1_to_3_years":         "1–3 years",
+    "3_to_10_years":        "3–10 years",
+    "10_plus_years":        "10+ years",
+    "under_5_percent":      "Under 5%",
+    "5_to_10_percent":      "5–10%",
+    "10_to_15_percent":     "10–15%",
+    "15_plus_percent":      "15%+",
+    "under_10_percent":     "Under 10%",
+    "10_to_25_percent":     "10–25%",
+    "25_to_50_percent":     "25–50%",
+    "50_plus_percent":      "50%+",
+    "esg_sustainability":   "ESG / Sustainability",
+    "exclude_tobacco_defense": "Exclude tobacco & defense",
+    "specific_industry_interest": "Specific industry",
+}
+
+
 def _format_profile_summary(profile: UserProfile) -> str:
     """Build a readable profile summary without an LLM call."""
     def _display(val) -> str:
         if isinstance(val, list):
             return ", ".join(_display(v) for v in val)
-        raw = val.value if hasattr(val, "value") else str(val)
-        return raw.replace("_", " ").title()
+        if hasattr(val, "value"):
+            raw = val.value
+            return _DISPLAY_LABELS.get(raw, raw.replace("_", " ").title())
+        return str(val)  # free text — preserve as-is
 
     status = profile.completion_status()
     lines = ["Here's what I have for you:\n"]
@@ -153,9 +207,7 @@ def _format_profile_summary(profile: UserProfile) -> str:
 
 def motivation_node(state: AgentState) -> dict:
     """Extract free-text motivation (Q10), then show profile summary for confirmation."""
-    llm = get_llm()
-
-    extraction_llm = llm.with_structured_output(ExtractedMotivation)
+    extraction_llm = get_extraction_llm(ExtractedMotivation)
     user_msg = state["messages"][-1].content
 
     extracted = extraction_llm.invoke([

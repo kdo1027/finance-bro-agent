@@ -306,9 +306,7 @@ def main():
                 print("\n\nGoodbye!")
                 break
             # Populate profile directly — no LLM extraction needed
-            profile = UserProfile(**state["profile"])
-            for key, val in answers.items():
-                setattr(profile, key, val)
+            profile = UserProfile.model_validate({**state["profile"], **answers})
             state["profile"] = profile.model_dump()
             # Build a readable string for the message history
             parts = [f"{k}: {', '.join(v) if isinstance(v, list) else v}" for k, v in answers.items()]
