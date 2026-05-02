@@ -1,0 +1,5 @@
+[server]
+# Disable module-path inspection to prevent Streamlit's file watcher from
+# crawling the transformers package and triggering hundreds of torchvision
+# import errors on startup.
+fileWatcherType = "none"
